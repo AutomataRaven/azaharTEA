@@ -1,1 +1,1 @@
-__all__ = ['editor.Editor']
+__all__ = ['editor.Editor','editorcontainer.EditorContainer']

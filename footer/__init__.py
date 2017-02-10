@@ -1,1 +1,1 @@
-pass
+__all__ = ['footer.Footer']
