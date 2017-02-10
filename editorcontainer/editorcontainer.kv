@@ -1,4 +1,5 @@
 #:kivy 1.9.1
+#:import get_color_from_hex kivy.utils.get_color_from_hex
 
 <EditorContainer>:
 
@@ -6,12 +7,19 @@
     editor: editor
     orientation: 'horizontal'
     
+    
     size_hint_x: 1
     size_hint_y: 1
     
     LineNumbersStrip:
-        id: line_numbers_strip
+        id: line_numbers_strip       
         
     Editor:
         id: editor
-
+        foreground_color: [0,0,0,0]
+        cursor_color: [0,0,0,1]
+        background_down: [1,1,1,1]
+        background_color: [1,1,1,1]
+        background_normal: ''
+        background_active: ''
+        padding: 0
