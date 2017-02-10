@@ -8,12 +8,15 @@ from styles.styleloader import StyleLoader
 
 class Editor(CodeInput):
     
-    def __init__(self,name, style_loader, **kwargs):
+    def __init__(self, **kwargs):
         super(Editor, self).__init__(**kwargs)
-        self.editor_style_name = name
+
+
+    def build_editor(self, editor_style_name, style_loader):
+    
+        self.editor_style_name = editor_style_name
         self.style_loader = style_loader
-
-
+        
     def _get_bbcode(self, ntext):
         # get bbcoded text for python
         try:

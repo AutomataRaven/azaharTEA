@@ -16,7 +16,7 @@ class StyleLoader:
     def set_style(self, name = DEFAULT):
     
         try:
-            with open(os.path.join('styles', name + '.json'), 'r') as file:
+            with open(os.path.join('styles',name + '.json'), 'r') as file:
                 self.style = json.load(file)
                 # Assuming for the time being that all data are
                 # colors.
@@ -25,5 +25,19 @@ class StyleLoader:
                     
         except FileNotFoundError as err:
             print(err, 'Loading default style', sep = '\n')
-            self.set_style(self.DEFAULT)       
+            self.set_default_style()      
+         
+    def set_default_style(self):
+     
+        try:
+            with open(os.path.join('styles',self.DEFAULT + '.json'), 'r') as file:
+                self.style = json.load(file)
+                # Assuming for the time being that all data are
+                # colors.
+                for key, value in self.style.items():
+                    self.style[key] = get_color_from_hex(value)
+                    
+        except FileNotFoundError as err:
+            print(err, "Couldn't find 'default.json'", sep = '\n')     
+        
          

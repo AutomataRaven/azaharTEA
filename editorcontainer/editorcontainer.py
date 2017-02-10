@@ -1,20 +1,18 @@
 from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty
 
 from editorcontainer.editor.editor import Editor
 from editorcontainer.linenumbersstrip.linenumbersstrip import LineNumbersStrip
 
 class EditorContainer(BoxLayout):
    
-   def __init__(self, style_loader, **kwargs):
-       
-       super(EditorContainer, self).__init__(**kwargs)
-       self.style_loader = style_loader
+   line_numbers_strip = ObjectProperty(None)
+   editor = ObjectProperty(None)
    
-   def build_editor_container(self):
+   def build_editor_container(self, style_loader):
        
-       ln_strip = LineNumbersStrip()
-       self.add_widget(ln_strip)
+       self.style_loader = style_loader             
        
-       editor = Editor(self.style_loader.style_name, self.style_loader,
-                       **self.style_loader.style)
-       self.add_widget(editor)
+       self.editor.build_editor(self.style_loader.style_name, 
+                                self.style_loader)          
+

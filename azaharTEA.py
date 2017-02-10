@@ -2,6 +2,7 @@ import kivy
 kivy.require('1.9.1')
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty
 
 from styles.styleloader import StyleLoader
 from editorcontainer.editorcontainer import EditorContainer
@@ -12,20 +13,15 @@ from kivyloader import load_all_kv_files
 
 class Container(BoxLayout):
 
-
+    menu_bar = ObjectProperty(None)
+    editor_container = ObjectProperty(None)
+    footer = ObjectProperty(None)
+    
     def build_text_editor(self):
     
-        self.style_loader = StyleLoader()       
-       
-        menu_bar = MenuBar()
-        self.add_widget(menu_bar)
+        self.style_loader = StyleLoader()             
         
-        editor_container = EditorContainer(self.style_loader)
-        editor_container.build_editor_container()      
-        self.add_widget(editor_container)
-        
-        footer = Footer()
-        self.add_widget(footer)
+        self.editor_container.build_editor_container(self.style_loader)              
               
 
 class AzaharTEAApp(App):
