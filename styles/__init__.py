@@ -1,1 +1,1 @@
-__all__ = ["styleloader"]
+__all__ = ["styleloader.StyleLoader"]
