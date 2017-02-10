@@ -1,7 +1,7 @@
 from kivy.app import App
 
 from styles.styleloader import StyleLoader
-from editor.editor import Editor
+from editorcontainer.editor.editor import Editor
 
 class TextEditorApp(App):
     
