@@ -1,0 +1,24 @@
+#:kivy 1.9.1    
+#:import Factory kivy.factory.Factory
+
+#:set color_button (0.4, 0.43, 0.48, 1)  # brown
+#:set color_button_pressed (0.7, 0.73, 0.78, 1)  # darker brown
+#:set color_font   (1, 1, 1, 1)  # off white
+
+<FMSpinnerOption@SpinnerOption>:
+    background_color: color_button if self.state == 'down' else color_button_pressed
+    background_down: ''
+    background_normal: ''
+    color: color_font
+    
+            
+<FileMenu>:
+    text: 'File'
+    size_hint_y: 1
+    size_hint_x: None
+    width: 90
+    background_normal: ''
+    background_down: ''
+    values: root.values
+    background_color: color_button if self.state == 'normal' else color_button_pressed
+    option_cls: Factory.get("FMSpinnerOption")
