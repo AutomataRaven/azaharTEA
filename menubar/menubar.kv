@@ -1,7 +1,9 @@
 #:kivy 1.9.1
 
-<MenuBar>:
+<MenuBar>:    
 
+    file_menu: file_menu
+    
     size_hint_x: 1
     size_hint_y: None
     height: 40
@@ -11,4 +13,7 @@
             rgba: 0.6, 0.63, 0.68, 1
         Rectangle:
             pos: self.pos
-            size: self.size    
+            size: self.size        
+        
+    FileMenu:
+        id: file_menu

@@ -1,7 +1,10 @@
-from kivy.uix.widget import Widget
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty
+from kivy.uix.button import Button
 
+from menubar.menus.filemenu import FileMenu
 
-class MenuBar(Widget):
+class MenuBar(BoxLayout):
    
-    def build_menu(self):
-        pass
+    action_view = ObjectProperty(None)    
+
