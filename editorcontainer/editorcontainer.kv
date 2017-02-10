@@ -1,43 +1,35 @@
 #:kivy 1.9.1
 #:import get_color_from_hex kivy.utils.get_color_from_hex
 
-<EditorContainer>:
-    
+<EditorTab>:    
+     
     line_numbers_strip: line_numbers_strip
     editor: editor
-    tabbed_panel: tabbed_panel
-    
-    orientation: 'horizontal'  
-        
+             
+    text: 'New'
+            
+    BoxLayout:
+            
+        orientation: 'horizontal'
+                
+        LineNumbersStrip:
+            id: line_numbers_strip
+                
+        Editor:
+            id: editor
+                    
+<EditorContainer>:
+      
+    default_editor_tab: default_editor_tab
+           
     size_hint_x: 1
     size_hint_y: 1
-                      
-    TabbedPanel:
+                                     
+    background_image: ''
         
-        background_image: ''
-        id: tabbed_panel
+    do_default_tab: False  
+            
+    background_color: [0,0,0,1]
         
-        do_default_tab: False  
-            
-        background_color: [0,0,0,1]
-        
-        TabbedPanelItem:    
-            
-            text: 'New'
-            
-            BoxLayout:
-            
-                orientation: 'horizontal'
-                
-                LineNumbersStrip:
-                    id: line_numbers_strip
-                
-                Editor:
-                    id: editor
-                    foreground_color: [0,0,0,0]
-                    cursor_color: [0,0,0,1]
-                    background_down: [1,1,1,1]
-                    background_color: [1,1,1,1]
-                    background_normal: ''
-                    background_active: ''
-                    padding: 0
+    EditorTab:
+        id: default_editor_tab
