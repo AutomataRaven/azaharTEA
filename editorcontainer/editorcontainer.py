@@ -16,6 +16,12 @@ class EditorContainer(TabbedPanel):
        self.style_loader = style_loader             
              
        self.default_editor_tab.send_style(self.style_loader)
+       
+   def add_new_tab(self):
+       
+       editor = EditorTab(text='Otra')
+       self.add_widget(editor)
+       self.switch_to(editor)
             
               
 class EditorTab(TabbedPanelItem):
