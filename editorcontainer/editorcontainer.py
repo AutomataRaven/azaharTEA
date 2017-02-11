@@ -15,6 +15,9 @@ class EditorContainer(TabbedPanel):
        
        editor = EditorTab()
        self.add_widget(editor)
+       
+       #TODO Change this to 'self.switch_to(editor, do_scroll=True) 
+       # when kivy 1.9.2 releases
        self.switch_to(editor)
             
               
