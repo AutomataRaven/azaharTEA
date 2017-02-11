@@ -5,7 +5,7 @@ from menubar.menus.filechoosers.savedialog import SaveDialog
 
 class FileMenu(Spinner):
 
-    # TODO find a way to group values and FM_events in a single 
+    #TODO find a way to group values and FM_events in a single 
     # structure.
     values = ListProperty(['New File', 'Save', 'Save as'])
     

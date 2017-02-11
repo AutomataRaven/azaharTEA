@@ -1,13 +1,37 @@
 #:kivy 1.9.1
-#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:set color_button (0.5, 0.5, 0.5, 1)  
+#:set color_button_pressed (0, 0, 0, 1)  
 
+<StripLayout>
+
+    canvas.before:
+        Color:
+            rgba: (.6, .62, .64, 1) # green
+        Rectangle:
+            size: root.size
+            pos: self.pos
+
+<TabbedPanelStrip>
+
+    cols: 5   
+    rows: 1
+    
+    padding: 0
+               
+<TabbedPanelHeader>:
+
+    background_color: color_button if self.state == 'normal' else color_button_pressed
+                
 <EditorTab>:    
      
     line_numbers_strip: line_numbers_strip
     editor: editor
              
     text: 'New'
-            
+         
+    size_hint_x: 1
+    size_hint_Y: 1
+       
     BoxLayout:
             
         orientation: 'horizontal'
