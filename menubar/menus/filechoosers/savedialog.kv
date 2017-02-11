@@ -1,0 +1,43 @@
+#:kivy 1.9.1
+
+#:import os os
+
+<SaveDialog>:
+    text_input: text_input
+    save_button: save_button
+    cancel_button: cancel_button
+    
+    title: 'Save File'
+    size_hint_x: 0.8
+    size_hint_y: 0.8
+    
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserIconView:
+            id: filechooser
+            path: os.getcwd()
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint_y: None
+            cursor_color: [0, 0, 0, 1]
+            height: 30
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            
+            Button:
+                id: cancel_button
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                id: save_button
+                text: "Save"
+                on_release: root.save(filechooser.path, text_input.text)
+               
