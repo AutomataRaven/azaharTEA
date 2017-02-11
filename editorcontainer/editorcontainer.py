@@ -9,17 +9,11 @@ from editorcontainer.linenumbersstrip.linenumbersstrip import LineNumbersStrip
 
 class EditorContainer(TabbedPanel):   
    
-   default_editor_tab = ObjectProperty(None)
-   
-   def build_editor_container(self, style_loader):
-       
-       self.style_loader = style_loader             
-             
-       self.default_editor_tab.send_style(self.style_loader)
+   default_editor_tab = ObjectProperty(None)              
        
    def add_new_tab(self):
        
-       editor = EditorTab(text='Otra')
+       editor = EditorTab()
        self.add_widget(editor)
        self.switch_to(editor)
             
@@ -28,6 +22,3 @@ class EditorTab(TabbedPanelItem):
 
     line_numbers_strip = ObjectProperty(None)
     editor = ObjectProperty(None)
-    
-    def send_style(self, style_loader):
-        self.editor.build_editor(style_loader.style_name, style_loader)
