@@ -13,9 +13,22 @@ class FileMenu(Spinner):
         self.FM_events = {'Save as': self.save_as}
     
     def _on_dropdown_select(self, instance, value):
+    
         self.is_open = False
-        self.FM_events[value]()
+        
+        try:
+            self.FM_events[value]()
+        except KeyError as err:
+            
+            print(err,'{}: no such option defined'.format(value), sep='\n')
    
     def save_as(self):
-        SaveDialog().open()
+    
+        save_dialog = SaveDialog()
+        save_dialog.to_save(self.editor_container.current_tab)
+        save_dialog.open()
+        
+    def propagate_editor_container(self, editor_container):
+    
+        self.editor_container = editor_container
     

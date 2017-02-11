@@ -12,11 +12,16 @@ class SaveDialog(Popup):
     def cancel(self):
         self.dismiss()
         
+    def to_save(self, tab):
+        self.tab_to_save = tab
+        
+    
     def save(self, path, name):
     
         try:
             with open(os.path.join(path,name), 'w') as file:
-                file.write('')
+                file.write(self.tab_to_save.editor.text)
+                self.tab_to_save.text = name
                     
         except PermissionError as err:
             print(err, "You don't have the required access rights"
