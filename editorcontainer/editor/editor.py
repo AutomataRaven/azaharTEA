@@ -9,8 +9,8 @@ class Editor(CodeInput):
     def __init__(self, **kwargs):
         super(Editor, self).__init__(**kwargs)
         #The default will be plain text
-        self.change_lexer(lexers.TextLexer())
-       
+        self.change_lexer(lexers.TextLexer())      
+        
     def change_lexer(self, lexer = None):
         
         if lexer is not None:
