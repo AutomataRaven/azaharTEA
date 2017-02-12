@@ -20,7 +20,7 @@ class SaveDialog(Popup):
     
         try:
             with open(os.path.join(path,name), 'w') as file:
-                file.write(self.tab_to_save.editor.text)
+                file.write(self.tab_to_save.content.editor.text)
                 self.tab_to_save.text = name
                     
         except PermissionError as err:
