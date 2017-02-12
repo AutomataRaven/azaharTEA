@@ -1,5 +1,8 @@
 import kivy
 kivy.require('1.9.1')
+from kivy.config import Config
+Config.set('kivy', 'desktop', 1)
+Config.set('input', 'mouse', 'mouse,disable_multitouch')
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
@@ -33,10 +36,9 @@ class AzaharTEAApp(App):
         
         container = Container()
         container.build_text_editor()
-        
+
         return container
-        
-        
+
 if __name__ == '__main__':
     AzaharTEAApp().run()
 
