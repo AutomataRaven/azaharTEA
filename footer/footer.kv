@@ -1,13 +1,32 @@
 #:kivy 1.9.1
 
 <Footer>:
+
+    highlight_menu: highlight_menu
+    
     size_hint_x: 1
     size_hint_y: None
     height: 30
-   
+    orientation: 'rl-bt'   
+    
     canvas:
         Color: 
             rgba: 0.8, 0.83, 0.88, 1
         Rectangle:
             pos: self.pos
-            size: self.size  
+            size: self.size
+                                
+    FooterSpinner:
+        text: 'Line Col'
+        id: line_col_menu
+                      
+    FooterSpinner:
+        text: 'Plain Text'
+        id: highlight_menu
+        
+        
+<FooterSpinner>:
+            
+    size_hint_y: 1
+    size_hint_x: None
+    on_release: self.display_state = self.states[self.state_index]
