@@ -27,7 +27,9 @@ class Footer(StackLayout):
             # See if a menu was already created to
             # sped up displaying it after the first time
             if not widget.child_menu:
+                widget.editor_container = self.editor_container
                 hl = HighlightMenu(pos=(widget.x, widget.y + widget.height))
+                hl.editor_container = self.editor_container
                 pos = self.calculate_pos(container, hl)
                 widget.bind(pos=lambda w, pos: self.change_pos(w, hl))
                 widget.child_menu = hl
@@ -51,6 +53,9 @@ class Footer(StackLayout):
         widget.pos = (parent.x, parent.y + parent.height)
         self.calculate_pos(container, widget)
 
+    def propagate_editor_container(self, editor_container):
+    
+        self.editor_container = editor_container
                         
 class FooterSpinner(Spinner):
 
@@ -58,6 +63,7 @@ class FooterSpinner(Spinner):
     states = ['hidden','displayed']
     state_index = NumericProperty(0)
     child_menu = ObjectProperty(None)
+    editor_container = ObjectProperty(None)
     
     def on_display_state(self, instance, value):
  
