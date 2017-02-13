@@ -31,8 +31,8 @@ class Footer(StackLayout):
                 pos = self.calculate_pos(container, hl)
                 widget.bind(pos=lambda w, pos: self.change_pos(w, hl))
                 widget.child_menu = hl
-            
-        widget.add_widget(widget.child_menu)           
+                      
+            widget.add_widget(widget.child_menu)           
    
     def menu_hide(self, widget):
         widget.remove_widget(widget.child_menu)
