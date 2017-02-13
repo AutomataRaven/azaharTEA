@@ -24,6 +24,9 @@ class Container(BoxLayout):
              
         # Send editorcontainer to menubar and from there propapagate it
         self.menu_bar.propagate_editor_container(self.editor_container)
+        # Send editorcontainer to footer and from there propapagate it
+        self.footer.propagate_editor_container(self.editor_container)
+        
 
 class AzaharTEAApp(App):
  
