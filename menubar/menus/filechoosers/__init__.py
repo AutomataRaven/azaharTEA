@@ -1,1 +1,1 @@
-__all__ = ['savedialog.SaveDialog']
+__all__ = ['savedialog.SaveDialog','opendialog.OpenDialog']
