@@ -48,14 +48,15 @@ class EditorContainer(TabbedPanel):
     def build_tab(self, file_path, mimetype):
     
         text = ''
+        dir_path = None
+        file_name = None
         
-        if self.default_tab_file_path is not None:
+        if file_path is not None:
         
             with open(file_path) as file:
                 text = file.read()
                 
-                 
-        dir_path, file_name = os.path.split(file_path)
+            dir_path, file_name = os.path.split(file_path)
         
         editor_tab = self.add_new_tab(mimetype,
                          file_name)
