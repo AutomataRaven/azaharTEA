@@ -52,9 +52,22 @@ class EditorContainer(TabbedPanel):
         file_name = None
         
         if file_path is not None:
-        
-            with open(file_path) as file:
-                text = file.read()
+
+            try:
+                   
+                with open(file_path) as file:
+                    text = file.read()
+                                     
+            except PermissionError as err:
+                print(err, "You don't have the required access rights"
+                      " to read: {0}".format(path), sep = '\n')
+                return
+            except FileNotFoundError as err:
+                print(err, "{}: not found".format(file_path), sep='\n')
+                return
+            except IsADirectoryError as err:
+                print(err, "Cannot open a directory", sep = '\n')  
+                return 
                 
             dir_path, file_name = os.path.split(file_path)
         
