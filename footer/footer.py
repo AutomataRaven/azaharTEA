@@ -9,12 +9,18 @@ from footer.menus.highlightmenu import HighlightMenu
 class Footer(StackLayout):
     
     highlight_menu = ObjectProperty(None)  
-    line_col_menu = ObjectProperty(None)    
+    line_col_menu = ObjectProperty(None)        
     
     def __init__(self, **kwargs):
         
         super(Footer, self).__init__(**kwargs)
-
+        self.menus_dict = {
+                     
+           'highlight_menu': self.change_lexer_information, 
+           'line_col_menu': None
+                     
+        }
+                     
     def build_footer(self):
         pass
         
@@ -56,6 +62,23 @@ class Footer(StackLayout):
     def propagate_editor_container(self, editor_container):
     
         self.editor_container = editor_container
+        
+    def change_information(self, information = dict()):
+        
+        try:
+            for key, value in information.items():
+                
+                action = self.menus_dict[key]
+                if action:
+                   action(value)
+                
+        except KeyError as err:
+            print(err, '{}: No such menu'.format(key), '\n') 
+      
+    def change_lexer_information(self, value):
+       
+       self.highlight_menu.text = value
+          
                         
 class FooterSpinner(Spinner):
 

@@ -11,6 +11,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
+from pygments.lexers import get_lexer_for_mimetype
 
 from editorcontainer.editorcontainer import EditorContainer
 from menubar.menubar import MenuBar
@@ -25,7 +26,9 @@ class Container(BoxLayout):
     footer = ObjectProperty(None)
     
     def build_text_editor(self):
-             
+
+        self.editor_container.build_default_tab() 
+                   
         # Send editorcontainer to menubar and from there propapagate it
         self.menu_bar.propagate_editor_container(self.editor_container)
         # Send editorcontainer to footer and from there propapagate it
@@ -37,13 +40,16 @@ class AzaharTEAApp(App):
     columns = NumericProperty(10)
     rows = NumericProperty(1)   
     
-    mime_type = None
+    mimetype = None
+    file_name = None
     
     def build(self):
         
         load_all_kv_files()
         
         container = Container()
+        container.editor_container.default_tab_mimetype = self.mimetype
+        container.editor_container.default_tab_file_path = self.file_name
         container.build_text_editor()
 
         return container
@@ -56,8 +62,8 @@ if __name__ == '__main__':
     # it with the correct lexer
     if len(sys.argv) > 1:
         mime_type, encoding = mimetypes.guess_type(sys.argv[1])
-        app.mime_type = mime_type
-        print(mime_type, encoding)
+        app.mimetype = mime_type
+        app.file_name = sys.argv[1]
         
     app.run()
 
