@@ -1,3 +1,7 @@
+#!/usr/bin/env python3.5
+import sys
+import mimetypes
+
 import kivy
 kivy.require('1.9.1')
 from kivy.config import Config
@@ -33,6 +37,8 @@ class AzaharTEAApp(App):
     columns = NumericProperty(10)
     rows = NumericProperty(1)   
     
+    mime_type = None
+    
     def build(self):
         
         load_all_kv_files()
@@ -43,5 +49,15 @@ class AzaharTEAApp(App):
         return container
 
 if __name__ == '__main__':
-    AzaharTEAApp().run()
+
+    app = AzaharTEAApp()
+    
+    # See if a file was opened directly to get the mime type and open 
+    # it with the correct lexer
+    if len(sys.argv) > 1:
+        mime_type, encoding = mimetypes.guess_type(sys.argv[1])
+        app.mime_type = mime_type
+        print(mime_type, encoding)
+        
+    app.run()
 
