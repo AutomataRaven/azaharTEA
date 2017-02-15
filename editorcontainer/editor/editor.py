@@ -5,9 +5,27 @@ from pygments import styles
 from pygments.util import ClassNotFound
 from pygments.formatters import BBCodeFormatter
 from kivy.uix.codeinput import CodeInput
+from kivy.utils import get_color_from_hex
 
 class Editor(CodeInput):
     
+    background_color_default_te = [1,1,1,1]
+     
+    def change_style(self, style = None):
+        
+        if style is not None:
+           
+            if style == 'default TE':
+                self.style_name = 'default'    
+                self.background_color = self.background_color_default_te
+            elif style == 'default' and self.style_name == 'default':
+                self.style_name = 'algol'
+                self.style_name = 'default'
+            else: 
+                try:
+                    self.style_name = style
+                except ClassNotFound as err:
+                    print(err, '{}: unknown style'.format(style))               
        
     def change_lexer(self, lexer = None):
         
@@ -25,3 +43,5 @@ class Editor(CodeInput):
         else:
             self.lexer = lexers.TextLexer()
             return self.lexer.name          
+
+                    
