@@ -2,6 +2,34 @@
 #:set color_button (0.5, 0.5, 0.5, 1)  
 #:set color_button_pressed (0, 0, 0, 1)  
 
+
+
+<CodeScrollView>:
+    id: scroll
+    code_input: editor
+    line_number: line_numbers_strip
+    line_numbers_strip: line_numbers_strip
+    editor: editor
+    
+    bar_width: 10
+    scroll_type: ['bars', 'content']
+    GridLayout:
+        cols: 2
+        size_hint: 1, None
+        height: max(scroll.height, self.minimum_height)
+        Editor:
+            id: line_numbers_strip
+            size_hint: None, 1
+            readonly: True
+            background_color: 0.5, 0.53, 0.58, 1
+            padding: [5, 0, 0, 0]
+        Editor:
+            id: editor
+            auto_indent: True
+            size_hint_y: None
+            height: max(self.minimum_height, scroll.height)
+
+
 <StripLayout>:
 
     canvas.before:
@@ -35,25 +63,7 @@
                 text: 'x'
                 border: [-1, -1, -1, -1]
                 on_release: root.close_editor_tab(self)
-     
-<EditorTabContent>: 
-
-    line_numbers_strip: line_numbers_strip
-    editor: editor
-    
-    size_hint_x: 1
-    size_hint_y: 1
-                            
-                       
-    orientation: 'horizontal'
-        
-                        
-    LineNumbersStrip:
-        id: line_numbers_strip
-                                
-    Editor:
-        id: editor
-                        
+                             
 <EditorContainer>:
                 
     size_hint_x: 1
