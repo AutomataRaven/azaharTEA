@@ -3,6 +3,7 @@ from kivy.uix.spinner import Spinner
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
+from kivy.properties import ListProperty
 
 from footer.menus.highlightmenu import HighlightMenu
 
@@ -10,6 +11,7 @@ class Footer(StackLayout):
     
     highlight_menu = ObjectProperty(None)  
     line_col_menu = ObjectProperty(None)        
+    cursor_pos = ListProperty([0,0])
     
     def __init__(self, **kwargs):
         
@@ -62,6 +64,18 @@ class Footer(StackLayout):
     def propagate_editor_container(self, editor_container):
     
         self.editor_container = editor_container
+        current_tab = self.editor_container.current_tab
+        self.editor_container.bind(current_tab=lambda w, v: self.change_current_tab(w, v))
+        self.change_current_tab(self.editor_container, None)
+    
+    def change_current_tab(self, widget, value):
+        editor = widget.current_tab.content.editor
+        editor.unbind(cursor=lambda w, v: self.cursor_info(w,v))
+        editor.bind(cursor=lambda w, v: self.cursor_info(w,v))
+        self.cursor_info(None, editor.cursor)
+        
+    def cursor_info(self, widget, value):
+        self.cursor_pos = [value[1] + 1, value[0] + 1]
         
     def change_information(self, information = dict()):
         
