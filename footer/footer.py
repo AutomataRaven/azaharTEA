@@ -33,7 +33,7 @@ class Footer(StackLayout):
             container = self.parent
             
             # See if a menu was already created to
-            # sped up displaying it after the first time
+            # speed up displaying it after the first time
             if not widget.child_menu:
                 widget.editor_container = self.editor_container
                 hl = HighlightMenu(pos=(widget.x, widget.y + widget.height))
