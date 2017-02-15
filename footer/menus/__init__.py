@@ -1,1 +1,1 @@
-__all__ = ['highlightmenu.HighlightMenu']
+__all__ = ['highlightmenu.HighlightMenu','highlightmenu.HighligthStyleMenu']

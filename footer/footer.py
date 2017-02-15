@@ -6,11 +6,14 @@ from kivy.properties import NumericProperty
 from kivy.properties import ListProperty
 
 from footer.menus.highlightmenu import HighlightMenu
+from footer.menus.highlightmenu import HighlightStyleMenu
 
 class Footer(StackLayout):
     
     highlight_menu = ObjectProperty(None)  
-    line_col_menu = ObjectProperty(None)        
+    line_col_menu = ObjectProperty(None) 
+    higlight_style_menu = ObjectProperty(None)  
+           
     cursor_pos = ListProperty([0,0])
     
     def __init__(self, **kwargs):
@@ -19,8 +22,8 @@ class Footer(StackLayout):
         self.menus_dict = {
                      
            'highlight_menu': self.change_lexer_information, 
-           'line_col_menu': None
-                     
+           'line_col_menu': None,
+           'highlight_style_menu': self.change_highlight_style
         }
                      
     def build_footer(self):
@@ -28,21 +31,27 @@ class Footer(StackLayout):
         
     def menu_display(self, widget):
     
-        if widget == self.highlight_menu:
-        
-            container = self.parent
+        if (widget == self.highlight_menu) or (widget == self.highlight_style_menu):
             
             # See if a menu was already created to
             # speed up displaying it after the first time
             if not widget.child_menu:
                 widget.editor_container = self.editor_container
-                hl = HighlightMenu(pos=(widget.x, widget.y + widget.height))
+                
+                if widget == self.highlight_menu:
+                    hl = HighlightMenu(pos=(widget.x, widget.y + widget.height))
+                elif widget == self.highlight_style_menu:
+                    hl = HighlightStyleMenu(pos=(widget.x, widget.y + widget.height))
+                    
                 hl.editor_container = self.editor_container
-                pos = self.calculate_pos(container, hl)
-                widget.bind(pos=lambda w, pos: self.change_pos(w, hl))
+                hl.center_x = widget.center_x
+                
+                #pos = self.calculate_pos(container, hl)
+                widget.bind(pos=lambda w, pos: self.change_pos(w))
                 widget.child_menu = hl
                       
-            widget.add_widget(widget.child_menu)           
+            widget.add_widget(widget.child_menu)
+                  
    
     def menu_hide(self, widget):
         widget.remove_widget(widget.child_menu)
@@ -56,10 +65,9 @@ class Footer(StackLayout):
         
         widget.x = widget.x - difference        
         
-    def change_pos(self, parent, widget):
-        container = parent.parent.parent
-        widget.pos = (parent.x, parent.y + parent.height)
-        self.calculate_pos(container, widget)
+    def change_pos(self, parent):
+        parent.child_menu.center_x = parent.center_x
+        #self.calculate_pos(container, widget)
 
     def propagate_editor_container(self, editor_container):
     
@@ -92,7 +100,9 @@ class Footer(StackLayout):
     def change_lexer_information(self, value):
        
        self.highlight_menu.text = value
-          
+       
+    def change_highlight_style(self, value):
+        pass   
                         
 class FooterSpinner(Spinner):
 
