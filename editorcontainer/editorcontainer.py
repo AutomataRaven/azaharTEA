@@ -7,11 +7,58 @@ from kivy.uix.tabbedpanel import TabbedPanelHeader
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.properties import BooleanProperty
+from kivy.uix.scrollview import ScrollView
 
 from editorcontainer.editor.editor import Editor
-from editorcontainer.linenumbersstrip.linenumbersstrip import LineNumbersStrip
 
 
+class CodeScrollView(ScrollView):
+
+    line_numbers_strip = ObjectProperty(None)
+    
+    editor = ObjectProperty(None)
+    
+    show_line_number = BooleanProperty(True)   
+    
+    def __init__(self, **kwargs):
+        super(CodeScrollView, self).__init__(**kwargs)
+        self.max_num_of_lines = 0
+        self.editor.bind(focus=self.on_editor_focus)
+        
+        if not self.show_line_number:
+            self.line_numbers_strip.parent.remove_widget(self.line_number)
+        else:
+            self.editor.bind(_lines=self.on_lines_change)
+
+    def on_editor_focus(self, *args):
+
+        if args[1]:
+            Window.bind(on_keyboard=self.on_keyboard)
+        else:
+            Window.unbind(on_keyboard=self.on_keyboard)
+
+    def on_keyboard(self, instance, key, scancode, codepoint, modifier):
+        pass
+
+    def on_lines_change(self, widget, value):
+    
+        n = len(value)
+        if n > self.max_num_of_lines:
+            self.update_lines_number(self.max_num_of_lines, n)
+
+
+    def update_lines_number(self, old, new):
+
+        self.max_num_of_lines = new
+        self.line_numbers_strip.text += \
+                    '\n'.join([str(i) for i in range(old + 1, new + 1)]) + '\n'
+        self.line_numbers_strip.width = self.line_numbers_strip._label_cached.get_extents(
+            str(self.max_num_of_lines))[0] + (self.line_numbers_strip.padding[0] * 2)
+        
+        
 class EditorContainer(TabbedPanel):   
    
       
@@ -24,15 +71,17 @@ class EditorContainer(TabbedPanel):
        
     def add_new_tab(self, mime_type=None, tab_name=None):
        
-        editor = EditorTab()
-        editor_content = EditorTabContent()
+        editor = EditorTab()       
+        
+        editor_content = CodeScrollView()
+
         editor.content = editor_content
         name = editor_content.editor.change_lexer(mime_type)
         
         editor.change_tab_name(tab_name)
        
         self.parent.footer.change_information({'highlight_menu': name})
-       
+
         self.add_widget(editor)
        
         #TODO Change this to 'self.switch_to(editor, do_scroll=True) 
@@ -56,8 +105,8 @@ class EditorContainer(TabbedPanel):
             try:
                    
                 with open(file_path) as file:
-                    text = file.read()
-                                     
+                    text = file.read()                            
+                        
             except PermissionError as err:
                 print(err, "You don't have the required access rights"
                       " to read: {0}".format(path), sep = '\n')
@@ -70,13 +119,12 @@ class EditorContainer(TabbedPanel):
                 return 
                 
             dir_path, file_name = os.path.split(file_path)
-        
+          
         editor_tab = self.add_new_tab(mimetype,
                          file_name)
                          
         editor_tab.content.editor.text = text
-        
-                   
+                                                      
 class EditorTab(TabbedPanelHeader):
        
     def close_editor_tab(self, widget):
@@ -116,10 +164,4 @@ class EditorTab(TabbedPanelHeader):
         
         if name is not None:
             self.text = name
-
-              
-class EditorTabContent(BoxLayout):
-
-    line_numbers_strip = ObjectProperty(None)
-    editor = ObjectProperty(None)
-    
+                            
