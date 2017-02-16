@@ -1,1 +1,1 @@
-__all__ = ['filemenu.FileMenu']
+__all__ = ['filemenu.FileMenu', 'filemenu.SeeMenu']

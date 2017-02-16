@@ -6,6 +6,7 @@
 
 <CodeScrollView>:
     id: scroll
+    layout: layout
     code_input: editor
     line_number: line_numbers_strip
     line_numbers_strip: line_numbers_strip
@@ -14,6 +15,7 @@
     bar_width: 10
     scroll_type: ['bars', 'content']
     GridLayout:
+        id: layout
         cols: 2
         size_hint: 1, None
         height: max(scroll.height, self.minimum_height)
