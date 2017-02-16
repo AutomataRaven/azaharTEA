@@ -6,11 +6,18 @@ from pygments.util import ClassNotFound
 from pygments.formatters import BBCodeFormatter
 from kivy.uix.codeinput import CodeInput
 from kivy.utils import get_color_from_hex
+from kivy.properties import StringProperty
 
 class Editor(CodeInput):
     
     background_color_default_te = [1,1,1,1]
-     
+    _path = StringProperty('')
+    _name = StringProperty('')
+    
+    def __init__(self, **kwargs):
+        
+        super(Editor, self).__init__(**kwargs)
+        
     def change_style(self, style = None):
         
         if style is not None:
@@ -27,6 +34,9 @@ class Editor(CodeInput):
                 except ClassNotFound as err:
                     print(err, '{}: unknown style'.format(style))               
        
+    def text_changed(self, *args):
+        pass
+           
     def change_lexer(self, lexer = None):
         
         if lexer is not None:
