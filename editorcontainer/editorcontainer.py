@@ -21,6 +21,8 @@ class CodeScrollView(ScrollView):
     
     editor = ObjectProperty(None)
     
+    layout = ObjectProperty(None)
+    
     show_line_number = BooleanProperty(True)   
     
     def __init__(self, **kwargs):
@@ -29,7 +31,7 @@ class CodeScrollView(ScrollView):
         self.editor.bind(focus=self.on_editor_focus)
         
         if not self.show_line_number:
-            self.line_numbers_strip.parent.remove_widget(self.line_number)
+            self.line_numbers_strip.parent.remove_widget(self.line_numbers_strip)
         else:
             self.editor.bind(_lines=self.on_lines_change)
 
@@ -49,6 +51,13 @@ class CodeScrollView(ScrollView):
         if n > self.max_num_of_lines:
             self.update_lines_number(self.max_num_of_lines, n)
 
+    def on_show_line_number(self, instance, value):
+        
+        if value:
+            self.line_numbers_strip.width = self.line_numbers_strip._label_cached.get_extents(
+            str(self.max_num_of_lines))[0] + (self.line_numbers_strip.padding[0] * 2)
+        else:
+            self.line_numbers_strip.width = 0
 
     def update_lines_number(self, old, new):
 
