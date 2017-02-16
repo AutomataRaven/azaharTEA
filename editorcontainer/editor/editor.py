@@ -37,16 +37,26 @@ class Editor(CodeInput):
                     print(err, '{}: unknown style'.format(style))               
        
     def text_changed(self, *args):
-        pass
+        self.tab.close_button_string = '*\nx'
          
     def save_tab(self):
-        
-        if self._name is not None:
             
-            complete_path = os.path.join(self._path, self._name)
-            with open(complete_path,'w+') as file:
-                file.write(self.text)
-                
+        if self._name is not None:
+                    
+            try:            
+                    
+                complete_path = os.path.join(self._path, self._name)
+                with open(complete_path,'w+') as file:
+                    file.write(self.text)
+                        
+                self.tab.close_button_string = 'x'
+                    
+            except PermissionError as err:
+                print(err, "You don't have the required access rights"
+                     " to write to: {0}".format(path), sep = '\n')
+            except IsADirectoryError as err:
+                print(err, "Cannot save file as directory", sep = '\n')        
+                                
         else:
             file_menu = self.editor_container.parent.menu_bar.file_menu
             file_menu.save_as()
