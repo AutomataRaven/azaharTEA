@@ -42,8 +42,12 @@ class CodeScrollView(ScrollView):
         else:
             Window.unbind(on_keyboard=self.on_keyboard)
 
-    def on_keyboard(self, instance, key, scancode, codepoint, modifier):
-        pass
+    def on_keyboard(self, keyboard, keycode, scancode, value, modifiers):
+        
+        # ctrl-s to save
+        if keycode == 115 and value == 's':
+            if 'ctrl' in modifiers and len(modifiers) == 1:
+                print('ctrl-s')
 
     def on_lines_change(self, widget, value):
     

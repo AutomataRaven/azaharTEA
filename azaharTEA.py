@@ -11,6 +11,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
+from kivy.core.window import Window
 from pygments.lexers import get_lexer_for_mimetype
 
 from editorcontainer.editorcontainer import EditorContainer
@@ -34,7 +35,7 @@ class Container(BoxLayout):
         # Send editorcontainer to footer and from there propapagate it
         self.footer.propagate_editor_container(self.editor_container)
         
-
+                
 class AzaharTEAApp(App):
  
     columns = NumericProperty(10)
@@ -51,9 +52,10 @@ class AzaharTEAApp(App):
         container.editor_container.default_tab_mimetype = self.mimetype
         container.editor_container.default_tab_file_path = self.file_name
         container.build_text_editor()
-
+        
         return container
-
+        
+        
 if __name__ == '__main__':
 
     app = AzaharTEAApp()
