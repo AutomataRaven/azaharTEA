@@ -2,6 +2,7 @@ import os
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
+from kivy.properties import StringProperty
 from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.uix.tabbedpanel import TabbedPanelHeader
 from kivy.uix.tabbedpanel import TabbedPanel
@@ -96,6 +97,8 @@ class EditorContainer(TabbedPanel):
         self.parent.footer.change_information({'highlight_menu': name})
 
         self.add_widget(editor_tab)
+        
+        editor_content.editor.tab = editor_tab
        
         #TODO Change this to 'self.switch_to(editor, do_scroll=True) 
         # when kivy 1.9.2 releases
@@ -156,7 +159,8 @@ class EditorContainer(TabbedPanel):
 class EditorTab(TabbedPanelHeader):
        
     close_button = ObjectProperty(None)
-       
+    close_button_string = StringProperty('x')
+    
     def close_editor_tab(self, widget):
      
         parent_panel = self.parent.tabbed_panel

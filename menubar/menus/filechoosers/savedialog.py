@@ -25,7 +25,8 @@ class SaveDialog(Popup):
                 editor._path = path
                 editor._name = name
                 self.tab_to_save.text = name
-                    
+                self.tab_to_save.close_button_string = 'x'
+                
         except PermissionError as err:
             print(err, "You don't have the required access rights"
                   " to write to: {0}".format(path), sep = '\n')
