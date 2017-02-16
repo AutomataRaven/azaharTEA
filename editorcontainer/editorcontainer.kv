@@ -45,7 +45,8 @@
 <EditorTab>:    
             
     text: 'New'
-         
+    close_button: close_button
+    
     size_hint_x: 1
     size_hint_Y: 1
     
@@ -60,6 +61,7 @@
             orientation: 'vertical'
             width: 22
             Button:
+                id: close_button
                 background_color: root.background_color if self.state == 'normal' else color_button_pressed
                 padding: 0, 0
                 text: 'x'

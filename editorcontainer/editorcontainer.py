@@ -155,6 +155,8 @@ class EditorContainer(TabbedPanel):
                                                       
 class EditorTab(TabbedPanelHeader):
        
+    close_button = ObjectProperty(None)
+       
     def close_editor_tab(self, widget):
      
         parent_panel = self.parent.tabbed_panel
