@@ -1,3 +1,5 @@
+import os
+
 from pygments import highlight
 from pygments import lexers
 from pygments.lexers import get_lexer_for_mimetype
@@ -11,13 +13,13 @@ from kivy.properties import StringProperty
 class Editor(CodeInput):
     
     background_color_default_te = [1,1,1,1]
-    _path = StringProperty('')
-    _name = StringProperty('')
+    _path = StringProperty(None)
+    _name = StringProperty(None)
     
     def __init__(self, **kwargs):
         
         super(Editor, self).__init__(**kwargs)
-        
+                
     def change_style(self, style = None):
         
         if style is not None:
@@ -36,7 +38,19 @@ class Editor(CodeInput):
        
     def text_changed(self, *args):
         pass
-           
+         
+    def save_tab(self):
+        
+        if self._name is not None:
+            
+            complete_path = os.path.join(self._path, self._name)
+            with open(complete_path,'w+') as file:
+                file.write(self.text)
+                
+        else:
+            file_menu = self.editor_container.parent.menu_bar.file_menu
+            file_menu.save_as()
+          
     def change_lexer(self, lexer = None):
         
         if lexer is not None:
@@ -54,4 +68,5 @@ class Editor(CodeInput):
             self.lexer = lexers.TextLexer()
             return self.lexer.name          
 
-                    
+    def propagate_editor_container(self, editor_container):
+        self.editor_container = editor_container                

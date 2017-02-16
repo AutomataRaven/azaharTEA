@@ -47,7 +47,7 @@ class CodeScrollView(ScrollView):
         # ctrl-s to save
         if keycode == 115 and value == 's':
             if 'ctrl' in modifiers and len(modifiers) == 1:
-                print('ctrl-s')
+                self.editor.save_tab()
 
     def on_lines_change(self, widget, value):
     
@@ -100,9 +100,12 @@ class EditorContainer(TabbedPanel):
         #TODO Change this to 'self.switch_to(editor, do_scroll=True) 
         # when kivy 1.9.2 releases
         self.switch_to(editor_tab)
-    
+
+        editor = editor_tab.content.editor
+        
+        editor.propagate_editor_container(self)
+            
         if tab_name is None:
-            editor = editor_tab.content.editor
             editor.text=' '
             editor.text=''
             editor.bind(text=editor.text_changed)
