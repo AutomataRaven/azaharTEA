@@ -84,24 +84,30 @@ class EditorContainer(TabbedPanel):
        
     def add_new_tab(self, mime_type=None, tab_name=None):
        
-        editor = EditorTab()       
+        editor_tab = EditorTab()       
         
         editor_content = CodeScrollView()
 
-        editor.content = editor_content
+        editor_tab.content = editor_content
         name = editor_content.editor.change_lexer(mime_type)
         
-        editor.change_tab_name(tab_name)
+        editor_tab.change_tab_name(tab_name)
        
         self.parent.footer.change_information({'highlight_menu': name})
 
-        self.add_widget(editor)
+        self.add_widget(editor_tab)
        
         #TODO Change this to 'self.switch_to(editor, do_scroll=True) 
         # when kivy 1.9.2 releases
-        self.switch_to(editor)
+        self.switch_to(editor_tab)
     
-        return editor
+        if tab_name is None:
+            editor = editor_tab.content.editor
+            editor.text=' '
+            editor.text=''
+            editor.bind(text=editor.text_changed)
+            
+        return editor_tab
         
     def build_default_tab(self):
     
@@ -135,8 +141,14 @@ class EditorContainer(TabbedPanel):
           
         editor_tab = self.add_new_tab(mimetype,
                          file_name)
-                         
-        editor_tab.content.editor.text = text
+          
+        editor =  editor_tab.content.editor
+            
+        editor._name = file_name
+        editor._path = dir_path          
+        editor.text = text
+        
+        editor.bind(text=editor.text_changed)
                                                       
 class EditorTab(TabbedPanelHeader):
        

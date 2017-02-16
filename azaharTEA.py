@@ -36,10 +36,7 @@ class Container(BoxLayout):
         self.footer.propagate_editor_container(self.editor_container)
         
                 
-class AzaharTEAApp(App):
- 
-    columns = NumericProperty(10)
-    rows = NumericProperty(1)   
+class AzaharTEAApp(App):  
     
     mimetype = None
     file_name = None
@@ -48,12 +45,13 @@ class AzaharTEAApp(App):
         
         load_all_kv_files()
         
-        container = Container()
+        self.container = Container()
+        container = self.container
         container.editor_container.default_tab_mimetype = self.mimetype
         container.editor_container.default_tab_file_path = self.file_name
         container.build_text_editor()
         
-        return container
+        return container       
         
         
 if __name__ == '__main__':
