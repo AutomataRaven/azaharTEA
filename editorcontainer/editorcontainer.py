@@ -40,7 +40,6 @@ class CodeScrollView(ScrollView):
 
         if args[1]:
             Window.bind(on_keyboard=self.on_keyboard)
-            Window.bind(on_mouse_down=self.on_mouse)
         else:
             Window.unbind(on_keyboard=self.on_keyboard)
 

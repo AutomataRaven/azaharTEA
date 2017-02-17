@@ -39,7 +39,7 @@ class Editor(CodeInput):
     def text_changed(self, *args):
         self.tab.close_button_string = '*\nx'
          
-    def save_tab(self):
+    def save_tab(self, all_tabs=False):
             
         if self._name is not None:
                     
@@ -57,7 +57,7 @@ class Editor(CodeInput):
             except IsADirectoryError as err:
                 print(err, "Cannot save file as directory", sep = '\n')        
                                 
-        else:
+        elif not all_tabs:
             file_menu = self.editor_container.parent.menu_bar.file_menu
             file_menu.save_as()
           

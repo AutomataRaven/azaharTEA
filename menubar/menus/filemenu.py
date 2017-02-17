@@ -22,7 +22,8 @@ class FileMenu(Spinner):
                             
             'Save As': self.save_as, 
             'New File': self.open_new_tab,
-            'Open File': self.open_file_tab
+            'Open File': self.open_file_tab,
+            'Save': self.save_all
         }
     
     def _on_dropdown_select(self, instance, value):
@@ -40,7 +41,10 @@ class FileMenu(Spinner):
         save_dialog = SaveDialog()
         save_dialog.to_save(self.editor_container.current_tab)
         save_dialog.open()
-       
+     
+    def save_all(self):
+        pass
+          
     def open_new_tab(self):
         self.editor_container.add_new_tab()
 
