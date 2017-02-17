@@ -7,7 +7,7 @@ from pygments import styles
 from pygments.util import ClassNotFound
 from pygments.formatters import BBCodeFormatter
 from kivy.uix.codeinput import CodeInput
-from kivy.utils import get_color_from_hex
+from kivy.utils import get_color_from_hex, get_hex_from_color
 from kivy.properties import StringProperty
 
 class Editor(CodeInput):
@@ -32,10 +32,19 @@ class Editor(CodeInput):
                 self.style_name = 'default'
             else: 
                 try:
-                    self.style_name = style
+                    self.style_name = style                     
                 except ClassNotFound as err:
                     print(err, '{}: unknown style'.format(style))               
-       
+        background_c = get_color_from_hex(self.style.background_color)
+        color_sum = sum(background_c[0:3])
+        if color_sum >= 0.5:
+            self.cursor_color = [0, 0, 0, 1]
+        else:
+            self.cursor_color = [1, 1, 1, 1]
+
+                
+        self._trigger_refresh_text()
+                   
     def text_changed(self, *args):
         self.tab.close_button_string = '*\nx'
          
