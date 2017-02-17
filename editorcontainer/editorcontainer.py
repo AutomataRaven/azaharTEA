@@ -40,6 +40,7 @@ class CodeScrollView(ScrollView):
 
         if args[1]:
             Window.bind(on_keyboard=self.on_keyboard)
+            Window.bind(on_mouse_down=self.on_mouse)
         else:
             Window.unbind(on_keyboard=self.on_keyboard)
 
@@ -49,7 +50,7 @@ class CodeScrollView(ScrollView):
         if keycode == 115 and value == 's':
             if 'ctrl' in modifiers and len(modifiers) == 1:
                 self.editor.save_tab()
-
+        
     def on_lines_change(self, widget, value):
     
         n = len(value)
