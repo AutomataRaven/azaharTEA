@@ -43,7 +43,11 @@ class FileMenu(Spinner):
         save_dialog.open()
      
     def save_all(self):
-        pass
+    
+        tabs = self.editor_container.tab_list
+        
+        for tab in tabs:
+            tab.content.editor.save_tab(True)
           
     def open_new_tab(self):
         self.editor_container.add_new_tab()
