@@ -1,9 +1,15 @@
+"""
+editorcontainer.py
+==================
+
+Module that contains all that's necessary to create
+the file tabs
+"""
 import os
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
-from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.uix.tabbedpanel import TabbedPanelHeader
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.uix.button import Button
@@ -17,60 +23,115 @@ from editorcontainer.editor.editor import Editor
 
 
 class CodeScrollView(ScrollView):
-
+    """A :py:class:`kivy.uix.scrollview.ScrollView` that contains the
+    editor and line numbers.
+    
+    The purpose of this class is to make the line numbers and editor
+    scrollable together.
+    """
+    
     line_numbers_strip = ObjectProperty(None)
+    """:py:class:`kivy.properties.ObjectProperty` reference to the line
+    numbers widget, of type :py:class:`~editorcontainer.editor.editor.Editor`
+    """
     
     editor = ObjectProperty(None)
-    
+    """:py:class:`kivy.properties.ObjectProperty` reference to the editor 
+    widget, of type :py:class:`~editorcontainer.editor.editor.Editor`
+    """
+        
     layout = ObjectProperty(None)
+    """Reference to the layout that is the content of this :py:class:`.CodeScrollView`.
     
-    show_line_number = BooleanProperty(True)   
+    It contains the :py:attr:`.editor` and :py:attr:`.line_numbers_strip`
+    """
+    
+    show_line_numbers = BooleanProperty(True)   
+    """:py:class:`kivy.properties.BooleanProperty` that indicates wether this
+    :py:class:`.CodeScrollView` should display the line numbers (:py:obj:`True`)
+    or not (:py:obj:`False`). Defaults to :py:obj:`True`.
+    """
     
     def __init__(self, **kwargs):
+        """Call __init__ from super and decide wether to show the line numbers"""
         super(CodeScrollView, self).__init__(**kwargs)
         self.max_num_of_lines = 0
         self.editor.bind(focus=self.on_editor_focus)
         
-        if not self.show_line_number:
-            self.line_numbers_strip.parent.remove_widget(self.line_numbers_strip)
+        parent = self.line_numbers_strip.parent
+        
+        if not self.show_line_numbers:
+            parent.remove_widget(self.line_numbers_strip)
         else:
             self.editor.bind(_lines=self.on_lines_change)
 
-    def on_editor_focus(self, *args):
-
-        if args[1]:
+    def on_editor_focus(self, widget, value):
+        """Bind or unbind on_keyboard depending on the focus of the editor
+        
+        It binds an event (with the method :py:meth:`.on_keyboard`) to the
+        :py:attr:`kivy.core.window.Window.on_keyboard` attribute.
+        
+        :param widget: Instance of the :py:attr:`kivy.uix.widget` on which the event ocurred. 
+        :param value: Value of the property of the event (:py:attr:`.editor.focus` in this case).        
+        """
+        if value:
             Window.bind(on_keyboard=self.on_keyboard)
         else:
             Window.unbind(on_keyboard=self.on_keyboard)
 
     def on_keyboard(self, keyboard, keycode, scancode, value, modifiers):
+        """Manage keyboard events (on :py:attr:`.editor`).
         
+        It controls wether it should save the file (ctrl-s), etc.
+        
+        :param keyboard: Instance of the keyboard manager.
+        :param keycode: Int that represents the pressed key.
+        :param scancode: Extra code (not used).
+        :param value: Value of the pressed key, as a :py:obj:`str`.
+        :param modifiers: List of pressed modifiers (such as 'ctrl', 'alt'...)
+        """
         # ctrl-s to save
         if keycode == 115 and value == 's':
             if 'ctrl' in modifiers and len(modifiers) == 1:
                 self.editor.save_tab()
         
     def on_lines_change(self, widget, value):
-    
+        """Manage event when :py:attr:`editorcontainer.editor.editor.Editor._lines` changes
+        
+        Requests an update on the line numbers depending on the situation.
+        
+        :param widget: Instance of the :py:attr:`kivy.uix.widget` on which the event ocurred.
+        :param value: Value of :py:attr:`.editor._lines` after it changed.      
+        """
         n = len(value)
         if n > self.max_num_of_lines:
             self.update_lines_number(self.max_num_of_lines, n)
 
-    def on_show_line_number(self, instance, value):
-        
+    def on_show_line_numbers(self, instance, value):
+        """Manage event when :py:attr:`.show_line_numbers` changes
+        """
         if value:
-            self.line_numbers_strip.width = self.line_numbers_strip._label_cached.get_extents(
-            str(self.max_num_of_lines))[0] + (self.line_numbers_strip.padding[0] * 2)
+            max_num_l = str(self.max_num_of_lines)
+            _get_extents = self.line_numbers_strip._label_cached.get_extents
+            padding = self.line_numbers_strip.padding[0] * 2
+            
+            self.line_numbers_strip.width = (_get_extents(str(max_num_l))[0] 
+                                             + padding)
         else:
             self.line_numbers_strip.width = 0
 
     def update_lines_number(self, old, new):
 
         self.max_num_of_lines = new
-        self.line_numbers_strip.text += \
-                    '\n'.join([str(i) for i in range(old + 1, new + 1)]) + '\n'
-        self.line_numbers_strip.width = self.line_numbers_strip._label_cached.get_extents(
-            str(self.max_num_of_lines))[0] + (self.line_numbers_strip.padding[0] * 2)
+        lines = [str(i) for i in range(old + 1, new + 1)]
+        self.line_numbers_strip.text += '\n'.join(lines) + '\n'
+           
+        max_num_l = str(self.max_num_of_lines)
+        _get_extents = self.line_numbers_strip._label_cached.get_extents
+        padding = self.line_numbers_strip.padding[0] * 2
+        
+        self.line_numbers_strip.width = (_get_extents(str(max_num_l))[0] 
+                                         + padding)
         
         
 class EditorContainer(TabbedPanel):   

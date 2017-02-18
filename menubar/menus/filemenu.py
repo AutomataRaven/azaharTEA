@@ -86,7 +86,7 @@ class SeeMenu(Spinner):
         tab_list = self.editor_container.tab_list
         
         for tab in tab_list:
-            tab.content.show_line_number = value
+            tab.content.show_line_numbers = value
 
           
     def _on_dropdown_select(self, instance, value):
