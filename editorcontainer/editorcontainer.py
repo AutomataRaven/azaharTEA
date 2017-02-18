@@ -163,6 +163,7 @@ class CodeScrollView(ScrollView):
         
 class EditorContainer(TabbedPanel):   
     """Used to create a tab for a new file or load a file.
+    
     This :py:class:`.EditorContainer` has tabs. Each tab 
     consists of an :py:class:`.EditorTab` and a content.
     
