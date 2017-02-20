@@ -285,7 +285,6 @@ class EditorContainer(TabbedPanel):
         editor_tab = self.add_new_tab(mime_type,
                          file_name)
           
-        print(mime_type)
         editor =  editor_tab.content.editor
             
         editor._name = file_name

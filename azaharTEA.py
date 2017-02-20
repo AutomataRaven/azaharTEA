@@ -110,7 +110,6 @@ if __name__ == '__main__':
     # it with the correct lexer
     if len(sys.argv) > 1:
         mime_type, encoding = mimetypes.guess_type(sys.argv[1])
-        print(mime_type)
         app.mimetype = mime_type
         app.file_name = sys.argv[1]
         

@@ -128,13 +128,11 @@ class Editor(CodeInput):
         :param mimetype: The mimetype for which a lexer should be found. The lexer is \
         changed to that found with this mimetype.
         """
-        print(os.path.splitext(self._name))       
         if mimetype is not None:
         
             try:
                 # If the mimetype is 'text/plain' and the extension
                 # of the file is '.kv', then a kivylexer should be used.
-
                 if mimetype == 'text/plain' and os.path.splitext(self._name)[1] == '.kv':
                     self.lexer = KivyLexer()
                 else:
@@ -156,7 +154,6 @@ class Editor(CodeInput):
             else:
                 self.lexer = lexers.TextLexer()
             
-        print(self.lexer.aliases)
         return self.lexer.name          
 
     def propagate_editor_container(self, editor_container):
