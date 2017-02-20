@@ -145,7 +145,7 @@ class Editor(CodeInput):
                 return self.lexer.name
             
                 
-        else:
+        elif self._name is not None:
             # If the mimetype is 'text/plain' and the extension
             # of the file is '.kv', then a kivylexer should be used.
 

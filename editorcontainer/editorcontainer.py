@@ -272,15 +272,12 @@ class EditorContainer(TabbedPanel):
             except PermissionError as err:
                 print(err, "You don't have the required access rights"
                       " to read: {0}".format(path), sep = '\n')
-                return
             except FileNotFoundError as err:
                 print(err, "{}: not found".format(file_path), sep='\n')
-                return
             except IsADirectoryError as err:
                 print(err, "Cannot open a directory", sep = '\n')  
-                return 
-                
-            dir_path, file_name = os.path.split(file_path)
+            else:
+                dir_path, file_name = os.path.split(file_path)
           
         editor_tab = self.add_new_tab(mime_type,
                          file_name)
