@@ -9,6 +9,7 @@ Contains menus related to highlighting, like menus for style and lexer.
 from kivy.uix.bubble import Bubble
 from kivy.properties import ObjectProperty
 from kivy.uix.button import Button
+from kivy.extras.highlight import KivyLexer
 from kivy.uix.gridlayout import GridLayout
 from pygments.lexers import get_all_lexers, get_lexer_by_name
 from pygments.styles import get_all_styles, get_style_by_name
@@ -56,6 +57,8 @@ class HighlightMenu(Bubble):
         sorted_lexers = [{name[0]: name[1][0]} 
                               for name in get_all_lexers()]
                               
+        sorted_lexers.append({'Kivy': 'Kivy'})
+                              
         self.lexers = {name[0]: name[1][0] for name in get_all_lexers()}
         
         sorted_lexers = sorted(sorted_lexers, 
@@ -64,7 +67,7 @@ class HighlightMenu(Bubble):
         for lexer in sorted_lexers:
         
             for key, value in lexer.items():
-                self.add_lexer_to_list(key)
+                self.add_lexer_to_list(key)                
         
         self.scroll_view.add_widget(self.layout)
 
@@ -90,7 +93,11 @@ class HighlightMenu(Bubble):
         :param widget: Widget is a button that was added to :py:attr:`.HighlightMenu.layout`.       
         """
         
-        lexer = get_lexer_by_name(self.lexers[widget.text])
+        if widget.text == 'Kivy':
+            lexer = KivyLexer()
+        else:
+            lexer = get_lexer_by_name(self.lexers[widget.text])
+        
         self.parent.text = widget.text
                 
         self.parent.display_state = self.parent.states[self.parent.state_index]

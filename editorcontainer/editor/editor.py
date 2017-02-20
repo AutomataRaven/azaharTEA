@@ -15,6 +15,7 @@ from pygments import styles
 from pygments.util import ClassNotFound
 from pygments.formatters import BBCodeFormatter
 from kivy.uix.codeinput import CodeInput
+from kivy.extras.highlight import KivyLexer
 from kivy.utils import get_color_from_hex, get_hex_from_color
 from kivy.properties import StringProperty
 
@@ -127,11 +128,16 @@ class Editor(CodeInput):
         :param mimetype: The mimetype for which a lexer should be found. The lexer is \
         changed to that found with this mimetype.
         """
-        
         if mimetype is not None:
         
             try:
-                self.lexer = get_lexer_for_mimetype(mimetype)
+                # If the mimetype is 'text/plain' and the extension
+                # of the file is '.kv', then a kivylexer should be used.
+                if mimetype == 'text/plain' and os.path.splitext(self._name)[1] == '.kv':
+                    self.lexer = KivyLexer()
+                else:
+                    self.lexer = get_lexer_for_mimetype(mimetype)
+                
             except  ClassNotFound as err:
                 print(err, 'Unsopported type {}'.format(mimetype), sep='\n')
                 self.lexer = lexers.TextLexer()
@@ -140,8 +146,15 @@ class Editor(CodeInput):
             
                 
         else:
-            self.lexer = lexers.TextLexer()
-            return self.lexer.name          
+            # If the mimetype is 'text/plain' and the extension
+            # of the file is '.kv', then a kivylexer should be used.
+
+            if os.path.splitext(self._name)[1] == '.kv':
+                self.lexer = KivyLexer()
+            else:
+                self.lexer = lexers.TextLexer()
+            
+        return self.lexer.name          
 
     def propagate_editor_container(self, editor_container):
         """Propagate the :py:class:`~editorcontainer.editorcontainer.EditorContainer`
