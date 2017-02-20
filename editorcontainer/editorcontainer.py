@@ -9,6 +9,7 @@ the file tabs
 """
 
 import os
+import math
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
@@ -68,6 +69,8 @@ class CodeScrollView(ScrollView):
         Defaults to 0.
         """
         
+        self.scroll_distance = self.editor.line_height
+        
         self.editor.bind(focus=self.on_editor_focus)
         
         parent = self.line_numbers_strip.parent
@@ -103,12 +106,67 @@ class CodeScrollView(ScrollView):
         :param value: Value of the pressed key, as a :py:obj:`str`.
         :param modifiers: List of pressed modifiers (such as 'ctrl', 'alt'...)
         """
-        
+                
         # ctrl-s to save
         if keycode == 115 and value == 's':
             if 'ctrl' in modifiers and len(modifiers) == 1:
                 self.editor.save_tab()
         
+        # To fix the up and down keys navigation, keycode for up key
+        # is 273 and for down key is 274
+        if keycode == 274:
+            self.key_down()
+        if keycode == 273:
+            self.key_up()
+    
+    def key_down(self):
+        """Change the scroll position if the cursor postion after
+        pressing the 'down' if needed."""
+        
+        y_pos = self.editor.cursor_pos[1]
+        line_height = self.editor.line_height
+            
+        traveled = math.floor(self.scroll_y * float(self.viewport_size[1] - self.height))
+                                                                             
+        if ( self.viewport_size[1] > traveled):
+            inverse_traveled = self.viewport_size[1] - traveled
+        else:
+            inverse_traveled = 0
+                
+        inverse_y_pos =  self.viewport_size[1] - y_pos
+
+        if (inverse_y_pos + line_height) > inverse_traveled:
+            # Normalize the quantity to be between 0 and 1
+            normalized = self.convert_distance_to_scroll(0, line_height)
+            # Reposition the scroll
+            new_scroll_y = self.scroll_y - normalized[1] 
+                
+            if new_scroll_y >= 0:
+                self.scroll_y = new_scroll_y             
+            else:
+                self.scroll_y = 0       
+
+    def key_up(self):
+        """Change the scroll position if the cursor postion after
+        pressing the 'up' if needed."""
+        
+        y_pos = self.editor.cursor_pos[1]
+        line_height = self.editor.line_height
+            
+        traveled = math.floor(self.scroll_y * float(self.viewport_size[1] - self.height))          
+
+        if y_pos > (traveled + self.height):
+            # Normalize the quantity to be between 0 and 1
+            normalized = self.convert_distance_to_scroll(0, line_height)
+            # Reposition the scroll
+            new_scroll_y = self.scroll_y + normalized[1] 
+                
+            if new_scroll_y <= 1:
+                self.scroll_y = new_scroll_y             
+            else:
+                self.scroll_y = 1   
+                
+                                    
     def on_lines_change(self, widget, value):
         """Manage event when :py:attr:`editor._lines` changes
         
