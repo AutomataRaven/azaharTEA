@@ -208,12 +208,9 @@ class EditorContainer(TabbedPanel):
         editor_content = CodeScrollView()
 
         editor_tab.content = editor_content
-        name = editor_content.editor.change_lexer(mime_type)
         
-        editor_tab.change_tab_name(tab_name)
-       
-        self.parent.footer.change_information({'highlight_menu': name})
-
+        editor_tab.change_tab_name(tab_name)       
+               
         self.add_widget(editor_tab)
         
         editor_content.editor.tab = editor_tab
@@ -245,7 +242,7 @@ class EditorContainer(TabbedPanel):
         
         self.build_tab(self.default_tab_file_path, self.default_tab_mimetype)
 
-    def build_tab(self, file_path, mimetype):
+    def build_tab(self, file_path, mime_type):
         """Build a tab.
         
         The tab will have a path file_path and a mimetype mimetype.
@@ -285,15 +282,20 @@ class EditorContainer(TabbedPanel):
                 
             dir_path, file_name = os.path.split(file_path)
           
-        editor_tab = self.add_new_tab(mimetype,
+        editor_tab = self.add_new_tab(mime_type,
                          file_name)
           
+        print(mime_type)
         editor =  editor_tab.content.editor
             
         editor._name = file_name
         editor._path = dir_path          
         editor.text = text
-        
+ 
+        name = editor.change_lexer(mime_type)
+
+        self.parent.footer.change_information({'highlight_menu': name})
+                       
         editor.bind(text=editor.text_changed)
                                                       
 class EditorTab(TabbedPanelHeader):
