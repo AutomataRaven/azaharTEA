@@ -1,3 +1,11 @@
+"""
+editor
+======
+
+Contains the :py:class:`.Editor`, that is, the graphical part
+of the application to write/edit files.
+"""
+
 import os
 
 from pygments import highlight
@@ -10,17 +18,34 @@ from kivy.uix.codeinput import CodeInput
 from kivy.utils import get_color_from_hex, get_hex_from_color
 from kivy.properties import StringProperty
 
+
 class Editor(CodeInput):
-    
-    background_color_default_te = [1,1,1,1]
-    _path = StringProperty(None)
-    _name = StringProperty(None)
-    
-    def __init__(self, **kwargs):
+    """Inherits from :py:class:`kivy.uix.codeinput.CodeInput`.
+    It's a :py:class:`.kivy.uix.widget.Widget` that is adapted to highlight its
+    contents.
+    """
         
-        super(Editor, self).__init__(**kwargs)
+    background_color_default_te = [1,1,1,1]
+    """Default background color for the editor.
+    
+    It's set when the 'default TE' style is selected from the :py:class:`footer.footer.Footer`
+    and when the application is opened in default.
+    """
+    
+    _path = StringProperty(None)
+    """Path to the file (without the file's name) that this :py:class:`.Editor` has open."""
+    
+    _name = StringProperty(None)
+    """Name of the file (and tab) for this :py:class:`.Editor`"""
                 
     def change_style(self, style = None):
+        """Change the style of the editor.
+        
+        The style includes the background_color, the cursor color and the text 
+        (keywords, variable names...). It means that changes the highlighting style.
+        
+        :param style: Name of the style to which to change.
+        """
         
         if style is not None:
            
@@ -35,21 +60,45 @@ class Editor(CodeInput):
                     self.style_name = style                     
                 except ClassNotFound as err:
                     print(err, '{}: unknown style'.format(style))               
-        background_c = get_color_from_hex(self.style.background_color)
-        color_sum = sum(background_c[0:3])
-        if color_sum >= 0.5:
-            self.cursor_color = [0, 0, 0, 1]
-        else:
-            self.cursor_color = [1, 1, 1, 1]
+       
+        if self.style:
+            background_c = get_color_from_hex(self.style.background_color)
+            color_sum = sum(background_c[0:3])
+            if color_sum >= 0.5:
+                self.cursor_color = [0, 0, 0, 1]
+            else:
+                self.cursor_color = [1, 1, 1, 1]
 
                 
         self._trigger_refresh_text()
                    
     def text_changed(self, *args):
+        """Manage event when :py:attr:`.Editor.text` changes.
+        
+        Changes the content of :py:attr:`editorcontainer.editorcontainer.EditorTab.close_button_string`.
+        When that attribute is changed the text of :py:attr:`editorcontainer.editorcontainer.EditorTab.close_button`
+        is automatically updated.
+        
+        This means this method is used to indicate the stated of the tab (unsaved, saved). The mark is an
+        asterisk (*).
+        
+        :param \*args: Default arguments. Not used.
+        """
+        
         self.tab.close_button_string = '*\nx'
          
     def save_tab(self, all_tabs=False):
-            
+        """Save a tab.
+        
+        Writes the contents of this :py:class:`.Editor` to the file indicated by
+        :py:attr:`._path` and :py:attr:`._name`.
+        
+        :param all_tabs: Boolean that indicates wheter just this :py:attr:`.Editor` 's tab \
+        is being saved (:py:obj:`False`) or all the tabs open in the application are being \
+        saved (:py:obj:`True`). When all_tabs is :py:obj:`False`, if the contents of this \
+        :py:class:`.Editor` haven't been saved then a filechooser is shown.
+        """
+        
         if self._name is not None:
                     
             try:            
@@ -70,14 +119,21 @@ class Editor(CodeInput):
             file_menu = self.editor_container.parent.menu_bar.file_menu
             file_menu.save_as()
           
-    def change_lexer(self, lexer = None):
+    def change_lexer(self, mimetype = None):
+        """Change the lexer of this :py:class:`.Editor`.
         
-        if lexer is not None:
+        The lexer is what takes care of recognizing the keywords, variable names, etc.
+        
+        :param mimetype: The mimetype for which a lexer should be found. The lexer is \
+        changed to that found with this mimetype.
+        """
+        
+        if mimetype is not None:
         
             try:
-                self.lexer = get_lexer_for_mimetype(lexer)
+                self.lexer = get_lexer_for_mimetype(mimetype)
             except  ClassNotFound as err:
-                print(err, 'Unsopported type {}'.format(lexer), sep='\n')
+                print(err, 'Unsopported type {}'.format(mimetype), sep='\n')
                 self.lexer = lexers.TextLexer()
             finally:
                 return self.lexer.name
@@ -88,4 +144,11 @@ class Editor(CodeInput):
             return self.lexer.name          
 
     def propagate_editor_container(self, editor_container):
+        """Propagate the :py:class:`~editorcontainer.editorcontainer.EditorContainer`
+        to this :py:class:`.Editor`.
+        
+        :param editor_container: Should be a reference to :py:attr:`azaharTEA.Container.editor_container`, \
+        the :py:class:`~editorcontainer.editorcontainer.EditorContainer` of the application.
+        """
+        
         self.editor_container = editor_container                
