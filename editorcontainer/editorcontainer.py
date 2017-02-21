@@ -318,7 +318,7 @@ class EditorContainer(TabbedPanel):
         
         self.build_tab(self.default_tab_file_path, self.default_tab_mimetype)
 
-    def build_tab(self, file_path, mime_type):
+    def build_tab(self, file_path = None, mime_type = None):
         """Build a tab.
         
         The tab will have a path file_path and a mimetype mimetype.

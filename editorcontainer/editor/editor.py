@@ -38,7 +38,13 @@ class Editor(CodeInput):
     
     _name = StringProperty(None)
     """Name of the file (and tab) for this :py:class:`.Editor`"""
-                
+         
+    style_name_not_bound = 'default TE'
+    """Stores the style name but without being bound.
+    
+    Because it's not bound, it can store any name. Like 'default TE'
+    """       
+    
     def change_style(self, style = None):
         """Change the style of the editor.
         
@@ -52,13 +58,16 @@ class Editor(CodeInput):
            
             if style == 'default TE':
                 self.style_name = 'default'    
+                self.style_name_not_bound = 'default TE'
                 self.background_color = self.background_color_default_te
             elif style == 'default' and self.style_name == 'default':
                 self.style_name = 'algol'
                 self.style_name = 'default'
+                self.style_name_not_bound = 'default'
             else: 
                 try:
-                    self.style_name = style                     
+                    self.style_name = style
+                    self.style_name_not_bound = style                     
                 except ClassNotFound as err:
                     print(err, '{}: unknown style'.format(style))               
        
@@ -153,6 +162,9 @@ class Editor(CodeInput):
                 self.lexer = KivyLexer()
             else:
                 self.lexer = lexers.TextLexer()
+        else:
+            
+            self.lexer = lexers.TextLexer()
             
         return self.lexer.name          
 

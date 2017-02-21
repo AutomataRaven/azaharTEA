@@ -106,7 +106,7 @@ class FileMenu(Spinner):
         reference to :py:attr:`azaharTEA.Container.editor_container`) to open a new tab.
         """
         
-        self.editor_container.add_new_tab()
+        self.editor_container.build_tab()
 
     def open_file_tab(self):
         """Manage the event when the option "Open File" of :py:attr:`.values` is selected.

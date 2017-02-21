@@ -162,6 +162,11 @@ class Footer(StackLayout):
         editor.unbind(cursor=lambda w, v: self.cursor_info(w,v))
         editor.bind(cursor=lambda w, v: self.cursor_info(w,v))
         self.cursor_info(None, editor.cursor)
+        self.change_lexer_information(editor.lexer.name)
+        
+        # Use the not bound name to get the text that should actually
+        # be displayed.
+        self.change_highlight_style(editor.style_name_not_bound)
         
     def cursor_info(self, widget, value):
         """Update cursor's position information, :py:attr:`.cursor_pos`."""
@@ -194,7 +199,8 @@ class Footer(StackLayout):
        
     def change_highlight_style(self, value):
         """Change the text of the :py:attr:`.highlight_style_menu`"""
-        pass   
+        
+        self.highlight_style_menu.text = value  
    
                         
 class FooterSpinner(Spinner):
