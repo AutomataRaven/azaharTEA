@@ -246,6 +246,10 @@ class EditorContainer(TabbedPanel):
         (from 'console'). Defaults to :py:obj:`None`.
         """                     
        
+        # Bind current_tab to disable the unused editors
+        # and enable the current one.
+        self.bind(current_tab=self.disable_tabs)
+       
     def add_new_tab(self, mime_type=None, tab_name=None):
         """Add a new tab.
         
@@ -287,7 +291,19 @@ class EditorContainer(TabbedPanel):
             editor.bind(text=editor.text_changed)
             
         return editor_tab
+     
+    def disable_tabs(self, widget, value):
+        """Manage the event when the current_tab changes.
         
+        It enables the tab's editor to which the user changed and
+        disables all others.
+        """        
+        
+        for tab in self.tab_list:
+            tab.content.editor.disabled = True
+            
+        widget.current_tab.content.editor.disabled = False
+       
     def build_default_tab(self):
         """Build a default tab. It's a tab created when the application is opened.
         
