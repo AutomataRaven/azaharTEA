@@ -290,6 +290,8 @@ class EditorContainer(TabbedPanel):
             editor.text=''
             editor.bind(text=editor.text_changed)
             
+        self.footer_visibility()
+        
         return editor_tab
      
     def disable_tabs(self, widget, value):
@@ -367,7 +369,19 @@ class EditorContainer(TabbedPanel):
         self.parent.footer.change_information({'highlight_menu': name})
                        
         editor.bind(text=editor.text_changed)
-                                                      
+    
+    def footer_visibility(self):
+        """It there are no open tabs then remove the
+        footer from the GUI. If not then add it"""
+        
+        container = self.parent
+        if len(self.tab_list) == 0:
+            container.remove_widget(container.footer)
+        elif len(self.tab_list) == 1:
+            
+            if not (container.footer in container.children):      
+                container.add_widget(container.footer)
+                                                          
 class EditorTab(TabbedPanelHeader):
     """Tab header of a tab to add to the :py:class:`.EditorContainer`.
     
@@ -427,6 +441,10 @@ class EditorTab(TabbedPanelHeader):
                      
                 parent_panel.switch_to(parent_panel.tab_list[switch_index])
 
+        # Tell the EditorContainer to remove the footer if there are no more
+        # open tab
+        parent_panel.footer_visibility()
+        
     def change_tab_name(self, name=None):
         """Change the name of this :py:class:`.EditorTab`. The name is what's
         displayed in the tab header (that is, this :py:class:`.EditorTab`)."""
