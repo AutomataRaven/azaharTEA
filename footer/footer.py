@@ -236,6 +236,11 @@ class FooterSpinner(Spinner):
     editor_container = ObjectProperty(None)
     """Should be used to store a reference to :py:attr:`azaharTEA.Container.editor_container`."""
     
+    def __init__(self, **kwargs):   
+        
+        super(FooterSpinner, self).__init__(**kwargs)
+        self.bind(texture_size=self.on_texture_size)
+    
     def on_display_state(self, instance, value):
         """Manage event when :py:attr:`.display_state` changes.
         
@@ -251,4 +256,12 @@ class FooterSpinner(Spinner):
             self.parent.menu_hide(self)
             
         self.state_index = (self.state_index + 1) % len(self.states)
+   
+    def on_texture_size(self, widget, value):
+        """"""
         
+        self.width = self.texture_size[0] + 2 * self.padding_x
+    
+    
+    
+       
