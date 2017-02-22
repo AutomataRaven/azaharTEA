@@ -258,7 +258,13 @@ class FooterSpinner(Spinner):
         self.state_index = (self.state_index + 1) % len(self.states)
    
     def on_texture_size(self, widget, value):
-        """"""
+        """Manage event when texture_size changes in this :py:class:`.FooterSpinner` changes.
+        
+        The width of the menu is changed accordingly to fit text chosen in the menu.
+        
+        :param widget: Widget on which the event ocurred (this :py:class:`.FooterSpinner).
+        :param value: Value of texture_size after it changed.
+        """
         
         self.width = self.texture_size[0] + 2 * self.padding_x
     
