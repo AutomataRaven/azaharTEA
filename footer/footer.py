@@ -262,7 +262,7 @@ class FooterSpinner(Spinner):
         
         The width of the menu is changed accordingly to fit text chosen in the menu.
         
-        :param widget: Widget on which the event ocurred (this :py:class:`.FooterSpinner).
+        :param widget: Widget on which the event ocurred (this :py:class:`.FooterSpinner`).
         :param value: Value of texture_size after it changed.
         """
         

@@ -92,9 +92,48 @@ class CodeScrollView(ScrollView):
         
         if value:
             Window.bind(on_keyboard=self.on_keyboard)
+            Window.bind(on_mouse_down=self.on_mouse_down)
         else:
             Window.unbind(on_keyboard=self.on_keyboard)
+            Window.unbind(on_keyboard=self.on_mouse_down)
 
+    def on_mouse_down(self, mouse, x, y, button, modifiers):
+        """Manage event when some mouse button is utliized.
+        
+        For example, when the middle mouse button is used to scroll,
+        the cursor is repositioned here.
+        
+        :param mouse: Instance of the mouse listener.
+        :param x: x position of the mouse.
+        :param y: y position of the mouse.
+        :param button: Mouse button pressed ('left', 'right', 'scrollup', ...)
+        :param modifiers: Modifiers used for the mouse press ('ctrl', 'alt', ...)
+        """
+        
+        if button == 'scrollup':
+        
+            editor = self.editor
+            y_pos = math.floor(self.scroll_y 
+                              * float(self.viewport_size[1] - self.height))  
+            
+            new_col, new_row = editor.get_cursor_from_xy(self.scroll_x,
+                                                         y_pos)            
+
+            editor.cursor = (editor.cursor_col, new_row)
+            
+        if button == 'scrolldown':
+        
+            editor = self.editor
+            
+            y_pos = math.floor(self.scroll_y 
+                              * float(self.viewport_size[1] 
+                                      - self.height))  
+            
+            new_col, new_row = editor.get_cursor_from_xy(self.scroll_x,
+                                                         y_pos + self.height)           
+
+            editor.cursor = (editor.cursor_col, new_row)        
+        
     def on_keyboard(self, keyboard, keycode, scancode, value, modifiers):
         """Manage keyboard events (on :py:attr:`.editor`).
         
@@ -153,7 +192,8 @@ class CodeScrollView(ScrollView):
         y_pos = self.editor.cursor_pos[1]
         line_height = self.editor.line_height
             
-        traveled = math.floor(self.scroll_y * float(self.viewport_size[1] - self.height))          
+        traveled = math.floor(self.scroll_y 
+                              * float(self.viewport_size[1] - self.height))          
 
         if y_pos > (traveled + self.height):
             # Normalize the quantity to be between 0 and 1
