@@ -271,8 +271,10 @@ class EditorContainer(TabbedPanel):
 
         editor_tab.content = editor_content
         
-        editor_tab.change_tab_name(tab_name)       
-               
+        editor_tab.change_tab_name(tab_name)               
+              
+        #editor_tab.width = 200
+         
         self.add_widget(editor_tab)
         
         editor_content.editor.tab = editor_tab
@@ -282,6 +284,10 @@ class EditorContainer(TabbedPanel):
         self.switch_to(editor_tab)
 
         editor = editor_tab.content.editor
+        
+        if tab_name is None:
+            editor_tab.on_label_texture_size(editor_tab.label, 
+                                             editor_tab.label.text)
         
         editor.propagate_editor_container(self)
             
@@ -293,7 +299,7 @@ class EditorContainer(TabbedPanel):
         self.footer_visibility()
         
         return editor_tab
-     
+   
     def disable_tabs(self, widget, value):
         """Manage the event when the current_tab changes.
         
@@ -403,6 +409,17 @@ class EditorTab(TabbedPanelHeader):
     asterisk (*) on top of it.
     """
     
+    label = ObjectProperty(None)
+    """Label to place the name of the tab"""
+    
+    def __init__(self, **kwargs):
+        """Calls super's __init__ and binds texture_size of
+        :py:attr:`.label` to :py:meth:`.on_label_textture_size`."""
+        
+        super(EditorTab, self).__init__(**kwargs)
+        
+        self.label.bind(texture_size=self.on_label_texture_size)
+    
     def close_editor_tab(self):
         """Close this :py:class:`.EditorTab`.
 
@@ -449,5 +466,21 @@ class EditorTab(TabbedPanelHeader):
         """Change the name of this :py:class:`.EditorTab`. The name is what's
         displayed in the tab header (that is, this :py:class:`.EditorTab`)."""
         if name is not None:
-            self.text = name
+            self.label.text = name
+   
+    def on_label_texture_size(self, widget, value):
+        """Manage event when texture_size changes in :py:attr:`.label` changes.
+        
+        The width of the tab is changed accordingly to fit the tab name.
+        
+        :param widget: Widget on which the event ocurred (:py:attr:`.label`).
+        :param value: Value of texture_size after it changed.
+        """
+
+        double_padding = 2 * self.label.padding_x
+        self.label.width = self.label.texture_size[0] + double_padding
+        self.width = self.close_button.width + self.label.width
+   
+   
+   
                             
