@@ -469,7 +469,7 @@ class EditorTab(TabbedPanelHeader):
             self.label.text = name
    
     def on_label_texture_size(self, widget, value):
-        """Manage event when texture_size changes in :py:attr:`.label` changes.
+        """Manage event when texture_size changes in :py:attr:`.label`.
         
         The width of the tab is changed accordingly to fit the tab name.
         
