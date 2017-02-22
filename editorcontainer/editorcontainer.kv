@@ -45,37 +45,48 @@
                             
 <EditorTab>:    
             
-    text: 'New'
+    text: ''
     close_button: close_button
+    label: label
     
-    size_hint_x: 1
+    size_hint_x: None
     size_hint_Y: 1
     
     background_color: color_button if self.state == 'normal' else color_button_pressed 
     
+    width: close_button.width + label.width
     BoxLayout:
         pos: root.pos
         size_hint: None, None
         size: root.size
         BoxLayout:
-            size_hint: None, 1
-            orientation: 'vertical'
-            width: 22
+            size_hint: 1, 1
+            orientation: 'horizontal'
             Button:
+                size_hint_x: None
+                width: 22
                 id: close_button
                 background_color: root.background_color if self.state == 'normal' else color_button_pressed
                 padding: 0, 0
                 text: root.close_button_string
                 border: [-1, -1, -1, -1]
                 on_release: root.close_editor_tab()
+            Label:
+                size_hint_x: None
+                id: label
+                halign: 'left'
+                padding_x: 4
+                text: 'Esto es algo largo'
                              
 <EditorContainer>:
                 
     size_hint_x: 1
     size_hint_y: 1
-                                     
+         
+    tab_width: None
+                                
     background_image: ''
-        
+    
     do_default_tab: False  
             
     background_color: [0,0,0,1]       
