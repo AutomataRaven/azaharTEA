@@ -24,7 +24,7 @@ from kivy.properties import BooleanProperty
 from kivy.uix.scrollview import ScrollView
 
 from editorcontainer.editor.editor import Editor
-
+from editorcontainer.rightclickmenu.rightclickmenu import RightClickMenu
 
 class CodeScrollView(ScrollView):
     """A :py:class:`kivy.uix.scrollview.ScrollView` that contains the
@@ -55,6 +55,10 @@ class CodeScrollView(ScrollView):
     :py:class:`.CodeScrollView` should display the line numbers (:py:obj:`True`)
     or not (:py:obj:`False`). Defaults to :py:obj:`True`.
     """
+    
+    right_click_menu = None
+    """Stores the :py:class:`editorcontainer.rightclickmenu.rightclickmenu.RightClickMenu`
+    to use in the application."""
     
     def __init__(self, **kwargs):
         """Call __init__ from super and decide wether to show the line numbers"""
@@ -109,7 +113,44 @@ class CodeScrollView(ScrollView):
         :param button: Mouse button pressed ('left', 'right', 'scrollup', ...)
         :param modifiers: Modifiers used for the mouse press ('ctrl', 'alt', ...)
         """
+        self.editor.last_click = button
         
+        # In any case, remove a right click menu if there is one
+        rc_menu = self.right_click_menu
+        if rc_menu is not None and rc_menu in Window.children:
+        
+            top = Window.size[1] - (rc_menu.y + rc_menu.height)
+            bottom = (top + rc_menu.height - 10) #TODO find a way to remove this 10
+            # It's in the widget and I don't know why (in the widget in rightclickmenu.kv)
+            
+            if ((x < rc_menu.x or x > rc_menu.width + rc_menu.x)
+                or (y < top or y > bottom) or button == 'right'):
+                
+                Window.remove_widget(rc_menu)        
+        
+        # To show right click menu, let's brute force this.
+        # It calculates if the click is inside the visible area 
+        # of the editor.
+        if button == 'right':
+                      
+            self.editor.text_from = self.editor._selection_from
+            self.editor.text_to = self.editor._selection_to   
+            c_y = self.editor_container.y
+            c_h = self.editor_container.height
+            m_c_x = self.editor_container.to_widget(x, y, relative=True)
+            
+            top = (Window.size[1] - c_y 
+                   - c_h + self.editor_container._tab_layout.height)
+                   
+            bottom = c_h + self.editor_container.parent.menu_bar.height
+            
+            e_x = self.editor.x
+            e_w = self.editor.x + self.editor.width
+            if ((x >= e_x  and x < e_w) 
+                and (y >= top and y <= bottom) ):
+                
+                self.open_right_click_menu(x+15, y)                    
+            
         if button == 'scrollup':
         
             editor = self.editor
@@ -133,7 +174,25 @@ class CodeScrollView(ScrollView):
                                                          y_pos + self.height)           
 
             editor.cursor = (editor.cursor_col, new_row)        
+ 
+
+
+    def open_right_click_menu(self, x, y):
         
+        inv_y = Window.height - y
+        rc_menu = self.right_click_menu
+        
+        if rc_menu is not None:
+            rc_menu.pos = (x, inv_y - rc_menu.height)        
+        else:
+            rc_menu = RightClickMenu()
+            rc_menu.pos = (x, inv_y - rc_menu.height)
+            self.right_click_menu = rc_menu
+                                
+        rc_menu.editor = self.editor_container.current_tab.content.editor
+        
+        Window.add_widget(rc_menu)
+                    
     def on_keyboard(self, keyboard, keycode, scancode, value, modifiers):
         """Manage keyboard events (on :py:attr:`.editor`).
         
@@ -308,6 +367,8 @@ class EditorContainer(TabbedPanel):
         editor_tab = EditorTab()       
         
         editor_content = CodeScrollView()
+        
+        editor_content.editor_container = self
 
         editor_tab.content = editor_content
         

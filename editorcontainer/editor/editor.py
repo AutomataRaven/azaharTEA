@@ -15,10 +15,12 @@ from pygments import styles
 from pygments.util import ClassNotFound
 from pygments.formatters import BBCodeFormatter
 from kivy.uix.codeinput import CodeInput
+from kivy.uix.floatlayout import FloatLayout
 from kivy.extras.highlight import KivyLexer
 from kivy.utils import get_color_from_hex, get_hex_from_color
 from kivy.properties import StringProperty
-
+from kivy.core.window import Window
+from kivy.base import EventLoop
 
 class Editor(CodeInput):
     """Inherits from :py:class:`kivy.uix.codeinput.CodeInput`.
@@ -26,6 +28,8 @@ class Editor(CodeInput):
     contents.
     """
         
+    last_click = ''
+    
     background_color_default_te = [1,1,1,1]
     """Default background color for the editor.
     
@@ -45,6 +49,9 @@ class Editor(CodeInput):
     Because it's not bound, it can store any name. Like 'default TE'
     """       
     
+    def __init__(self, **kwargs):
+        super(Editor, self).__init__(**kwargs)
+        
     def change_style(self, style = None):
         """Change the style of the editor.
         
@@ -128,7 +135,27 @@ class Editor(CodeInput):
         elif not all_tabs:
             file_menu = self.editor_container.parent.menu_bar.file_menu
             file_menu.save_as()
-          
+
+    def cancel_selection(self):
+        '''Cancel current selection (if any).
+        '''
+
+        self._selection_from = self._selection_to = self.cursor_index()
+        self.selection_text = u''
+        self._selection = False
+        self._selection_finished = True
+        self._selection_touch = None
+        #self._trigger_update_graphics()
+
+    def on_cursor(self, instance, value):
+        # When the cursor is moved, reset cursor blinking to keep it showing,
+        # and update all the graphics.
+        if self.last_click not in ['right', 'scrolldown', 'scrollup']:
+            if self.focus:
+                pass
+                #self._trigger_cursor_reset()
+            self._trigger_update_graphics()
+
     def change_lexer(self, mimetype = None):
         """Change the lexer of this :py:class:`.Editor`.
         
