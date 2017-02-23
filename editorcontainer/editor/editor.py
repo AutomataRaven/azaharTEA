@@ -29,6 +29,10 @@ class Editor(CodeInput):
     """
         
     last_click = ''
+    """Stores the last click pressed.
+    
+    This is, stores a value like 'left', 'right', 'scrollup'...
+    """
     
     background_color_default_te = [1,1,1,1]
     """Default background color for the editor.
@@ -51,6 +55,23 @@ class Editor(CodeInput):
     
     def __init__(self, **kwargs):
         super(Editor, self).__init__(**kwargs)
+        self.text_from = 0
+        self.text_to = 0
+    
+    # Let's override this method to brute force the invisible text for the moment.
+    def paste(self):
+        ''' Insert text from system :class:`~kivy.core.clipboard.Clipboard`
+        into the :class:`~kivy.uix.textinput.TextInput` at current cursor
+        position.
+        .. versionadded:: 1.8.0
+        '''
+                    
+        super(Editor, self).paste()
+        
+        l = len(self.text)
+        c = self.text[l-1]
+        self.text = self.text[0:l-2]
+        self.text = self.text + c         
         
     def change_style(self, style = None):
         """Change the style of the editor.
@@ -136,6 +157,8 @@ class Editor(CodeInput):
             file_menu = self.editor_container.parent.menu_bar.file_menu
             file_menu.save_as()
 
+    # Let's override this method to be able to use the right
+    # click menu.
     def cancel_selection(self):
         '''Cancel current selection (if any).
         '''
@@ -147,13 +170,12 @@ class Editor(CodeInput):
         self._selection_touch = None
         #self._trigger_update_graphics()
 
+    # Let's override this method, too, to be able to use the right
+    # click menu.
     def on_cursor(self, instance, value):
-        # When the cursor is moved, reset cursor blinking to keep it showing,
-        # and update all the graphics.
+        """Manage event when this editor's cursor changes."""
+        # Update all the graphics.
         if self.last_click not in ['right', 'scrolldown', 'scrollup']:
-            if self.focus:
-                pass
-                #self._trigger_cursor_reset()
             self._trigger_update_graphics()
 
     def change_lexer(self, mimetype = None):
