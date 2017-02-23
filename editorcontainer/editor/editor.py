@@ -68,10 +68,11 @@ class Editor(CodeInput):
                     
         super(Editor, self).paste()
         
-        l = len(self.text)
-        c = self.text[l-1]
-        self.text = self.text[0:l-2]
-        self.text = self.text + c         
+        if len(self.text) > 0:
+            l = len(self.text)
+            c = self.text[l-1]
+            self.text = self.text[0:l-2]
+            self.text = self.text + c         
         
     def change_style(self, style = None):
         """Change the style of the editor.
