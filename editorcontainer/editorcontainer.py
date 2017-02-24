@@ -370,11 +370,7 @@ class EditorContainer(TabbedPanel):
         self.switch_to(editor_tab)
 
         editor = editor_tab.content.editor
-        
-        if tab_name is None:
-            editor_tab.on_label_texture_size(editor_tab.label, 
-                                             editor_tab.label.text)
-        
+            
         editor.propagate_editor_container(self)
             
         if tab_name is None:
@@ -440,10 +436,19 @@ class EditorContainer(TabbedPanel):
             except PermissionError as err:
                 print(err, "You don't have the required access rights"
                       " to read: {0}".format(path), sep = '\n')
+                
+                dir_path = mime_type = file_name = file_path = None
+                
             except FileNotFoundError as err:
                 print(err, "{}: not found".format(file_path), sep='\n')
+                
+                dir_path = mime_type = file_name = file_path = None
+
             except IsADirectoryError as err:
                 print(err, "Cannot open a directory", sep = '\n')  
+                
+                dir_path = mime_type = file_name = file_path = None
+                                
             else:
                 dir_path, file_name = os.path.split(file_path)
           
