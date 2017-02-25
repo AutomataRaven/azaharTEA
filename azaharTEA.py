@@ -1,6 +1,12 @@
 #!/usr/bin/env python3.5
 
-"""Entry module for the application.
+"""
+azaharTEA
+=========
+
+**Module** : ``azaharTEA.py``
+
+Entry module for the application.
 
 :py:class:`~.Container`
 
