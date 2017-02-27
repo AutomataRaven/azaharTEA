@@ -1,1 +1,27 @@
 #:kivy 1.9.1
+
+<Container>:
+
+    
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+                
+    menu_bar: menu_bar
+    editor_container: editor_container
+    footer: footer
+    
+    orientation: 'vertical'
+    padding: 0 
+   
+    MenuBar:
+        id: menu_bar
+    
+    EditorContainer: 
+        id: editor_container
+        
+    Footer:
+        id: footer

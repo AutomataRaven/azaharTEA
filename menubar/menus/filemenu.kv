@@ -1,0 +1,60 @@
+#:kivy 1.9.1    
+#:import Factory kivy.factory.Factory
+
+#:set color_button (1, 1, 1, 1)  
+#:set color_button_pressed (0.7, 0.73, 0.78, 1)  
+#:set color_font   (1, 1, 1, 1) 
+
+<FMSpinnerOption@SpinnerOption>:
+    background_color: color_button if self.state == 'normal' else color_button_pressed
+
+    color: color_font
+    border: [16, 16, 16, 16]
+     
+<FileMenu>:
+    text: 'File'
+    size_hint_y: 1
+    size_hint_x: None
+    width: 90
+    values: root.values
+    background_color: color_button if self.state == 'normal' else color_button_pressed
+    option_cls: Factory.get("FMSpinnerOption")
+    
+<SeeMenu>:
+    text: 'See'
+    size_hint_y: 1
+    size_hint_x: None
+    width: 90
+
+    values: root.values
+    background_color: color_button if self.state == 'normal' else color_button_pressed
+    option_cls: Factory.get("FMSpinnerOption")
+    on_release: self.open_menu(self)
+    
+<SeeMenuDropDown>
+
+    line_numbers_checkbox: line_numbers_checkbox
+
+    BoxLayout:
+    
+        canvas:
+            Color: 
+                rgba: 0.4, 0.43, 0.48, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        
+        size_hint_y: None
+        height: 44
+        orientation: 'horizontal'
+        
+        Label:
+            background_color: 
+            text: 'Line'
+            
+        CheckBox:
+            id: line_numbers_checkbox
+            size_hint_y: 1
+            active: True
+        
+        

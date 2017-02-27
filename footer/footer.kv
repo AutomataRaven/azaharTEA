@@ -1,0 +1,40 @@
+#:kivy 1.9.1
+
+<Footer>:
+
+    highlight_menu: highlight_menu
+    highlight_style_menu: highlight_style_menu
+    
+    size_hint_x: 1
+    size_hint_y: None
+    height: 30
+    orientation: 'rl-bt'   
+    
+    canvas:
+        Color: 
+            rgba: 0.8, 0.83, 0.88, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+                                
+    FooterSpinner:
+        text: "Ln:{0} col:{1}".format(root.cursor_pos[0], root.cursor_pos[1]) 
+        id: line_col_menu
+                      
+    FooterSpinner:
+        text: 'Text Only'
+        id: highlight_menu
+        
+    FooterSpinner:
+        text: 'default TE'
+        id: highlight_style_menu
+        
+        
+<FooterSpinner>:
+            
+    size_hint_y: 1
+    size_hint_x: None
+    
+    padding_x: 4
+    
+    on_release: self.display_state = self.states[self.state_index]
