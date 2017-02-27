@@ -125,6 +125,7 @@ class Editor(CodeInput):
         """
         
         self.tab.close_button_string = '*\nx'
+        self.tab.saved = False
          
     def save_tab(self, all_tabs=False):
         """Save a tab.
@@ -147,7 +148,8 @@ class Editor(CodeInput):
                     file.write(self.text)
                         
                 self.tab.close_button_string = 'x'
-                    
+                self.tab.saved = True
+                
             except PermissionError as err:
                 print(err, "You don't have the required access rights"
                      " to write to: {0}".format(path), sep = '\n')

@@ -25,6 +25,7 @@ from kivy.uix.scrollview import ScrollView
 
 from editorcontainer.editor.editor import Editor
 from editorcontainer.rightclickmenu.rightclickmenu import RightClickMenu
+from confirmationdialog.confirmationdialog import ConfirmationDialog
 
 class CodeScrollView(ScrollView):
     """A :py:class:`kivy.uix.scrollview.ScrollView` that contains the
@@ -533,52 +534,81 @@ class EditorTab(TabbedPanelHeader):
         super(EditorTab, self).__init__(**kwargs)
         
         self.label.bind(texture_size=self.on_label_texture_size)
-    
-    def close_editor_tab(self):
+        
+        self.saved = True
+        """Indicates if the contents of the tab were already saved (after a change).
+        
+        True = saved
+        False = unsaved
+        """
+        
+    def close_tab_question(self, widget, value):
+        """Close the tab after using a confirmation dialog, if the answer was 'yes'.
+        
+        :param widget: Widget on which the event ocurred \
+        (a :py:class:`confirmationdialog.confirmationdialog.ConfirmationDialog`).
+        :param value: Value after the change (the value of widget.answered).
+        """
+        
+        if value:
+            self.close_editor_tab(saved=True) 
+       
+    def close_editor_tab(self, saved=False):
         """Close this :py:class:`.EditorTab`.
 
         Determines to which tab to move (if some tab is open) when this one is
         closed.
         """
         
-        parent_panel = self.parent.tabbed_panel
-        
-        # Save the position to change tabs
-        # in theory to the one on the left
-        switch_index = parent_panel.tab_list.index(self)
-        
-        # See if the tab was the current one
-        was_current = False or (self is parent_panel.current_tab)
-        
-        parent_panel.remove_widget(self)
-        self.content.opacity = 0
-        
-        tab_list = parent_panel.tab_list
-        
-        # Find out if it's possible to change to other tab,
-        # then change to it
-        tab_list_len = len(parent_panel.tab_list) 
-        if(tab_list_len > 0):
-        
-            # It's not necessary if the tab wasn't the 'current_tab'            
+        if self.saved == False and saved == False:
+            description = 'This tab has unsaved changes'
+            question = 'Do you want to close it without saving?'
+            confirmation_dialog = ConfirmationDialog(description, 
+                                                         question)
+            confirmation_dialog.open()
+            confirmation_dialog.bind(answered=self.close_tab_question)     
+               
+        else:
             
-            if was_current:
+            parent_panel = self.parent.tabbed_panel
             
-                #Calculate position to switch to
-                if not switch_index == tab_list_len:
-                    switch_index = switch_index % tab_list_len
-                else:
-                    switch_index = tab_list_len - 1
-                     
-                parent_panel.switch_to(parent_panel.tab_list[switch_index])
+            # Save the position to change tabs
+            # in theory to the one on the left
+            switch_index = parent_panel.tab_list.index(self)
+            
+            # See if the tab was the current one
+            was_current = False or (self is parent_panel.current_tab)
+            
+            parent_panel.remove_widget(self)
+            self.content.opacity = 0
+            
+            tab_list = parent_panel.tab_list
+            
+            # Find out if it's possible to change to other tab,
+            # then change to it
+            tab_list_len = len(parent_panel.tab_list) 
+            if(tab_list_len > 0):
+            
+                # It's not necessary if the tab wasn't the 'current_tab'            
+                
+                if was_current:
+                
+                    #Calculate position to switch to
+                    if not switch_index == tab_list_len:
+                        switch_index = switch_index % tab_list_len
+                    else:
+                        switch_index = tab_list_len - 1
+                         
+                    parent_panel.switch_to(parent_panel.tab_list[switch_index])
 
-        # Tell the EditorContainer to remove the footer if there are no more
-        # open tab
-        parent_panel.footer_visibility()
+            # Tell the EditorContainer to remove the footer if there are no more
+            # open tabs
+            parent_panel.footer_visibility()
         
     def change_tab_name(self, name=None):
         """Change the name of this :py:class:`.EditorTab`. The name is what's
         displayed in the tab header (that is, this :py:class:`.EditorTab`)."""
+        
         if name is not None:
             self.label.text = name
    

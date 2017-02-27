@@ -33,6 +33,7 @@ from menubar.menubar import MenuBar
 from footer.footer import Footer
 from kivyloader import load_all_kv_files
 
+from confirmationdialog.confirmationdialog import ConfirmationDialog
 
 class Container(BoxLayout):
     """Contains the main *GUI* parts of the application.
@@ -62,6 +63,43 @@ class Container(BoxLayout):
     :py:class:`~footer.fotter.Footer` that contains 
     the footer menus and information
     """
+        
+    def __init__(self, **kwargs):
+        super(Container, self).__init__(**kwargs)
+        Window.bind(on_request_close=self.close_request)
+        
+        
+    def close_request(self, instance, source='keyboard'):
+        """Determine if the window should be closed.
+        
+        If there are unsaved tabs it will show a confirmation dialog.
+        
+        :param instance: Instance of the window
+        :param source: Source of the close request (keyboard, close button of the window...)
+        """
+
+        for tab in self.editor_container.tab_list:
+            
+            if not tab.saved:
+                description = 'There are unsaved tabs'
+                question = 'Do you want to close without saving?'
+                confirmation_dialog = ConfirmationDialog(description, 
+                                                         question)
+                confirmation_dialog.open()
+                confirmation_dialog.bind(answered=self.close_window)
+                return True
+        
+        return False
+        
+    def close_window(self, widget, value):
+        """Close the window after a confirmation dialog if the answer was 'yes'.
+        
+        :param widget: Widget on which the event ocurred \
+        (a :py:class:`confirmationdialog.confirmationdialog.ConfirmationDialog`).
+        :param value: Value after the change (the value of widget.answered).
+        """
+        if value == True:
+            App.get_running_app().stop()
         
     def build_text_editor(self):
         """Build the text editor.
