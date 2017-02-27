@@ -70,6 +70,7 @@ class SaveDialog(Popup):
                 editor._name = name
                 self.tab_to_save.text = name
                 self.tab_to_save.close_button_string = 'x'
+                self.tab_to_save.saved = True
                 
         except PermissionError as err:
             print(err, "You don't have the required access rights"

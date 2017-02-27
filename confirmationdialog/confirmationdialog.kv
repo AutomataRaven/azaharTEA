@@ -1,0 +1,50 @@
+#:kivy 1.9.1
+
+#:import os os
+
+<ConfirmationDialog>:
+    description_label: description_label
+    question_label: question_label
+    yes_button: yes_button
+    cancel_button: cancel_button
+    
+    title: ''
+    size_hint_x: 0.5
+    size_hint_y: None
+    height: 140
+    
+    BoxLayout:
+
+        pos: root.pos
+        orientation: "vertical"
+        
+        size_hint_y: None
+        height: 90
+    
+        Label:
+            id: description_label
+            size_hint_y: None
+            cursor_color: [0, 0, 0, 1]
+            height: 30
+
+        Label:
+            id: question_label
+            size_hint_y: None
+            cursor_color: [0, 0, 0, 1]
+            height: 30
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            orientation: 'horizontal'
+            
+            Button:
+                id: cancel_button
+                text: "Cancel"
+                on_release: root.answer(self)
+
+            Button:
+                id: yes_button
+                text: "Yes"
+                on_release: root.answer(self)
+               
